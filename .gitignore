@@ -1,0 +1,18 @@
+# Workspace
+.gemini/
+.antigravity/
+.vscode/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temp & Logs
+*.log
+.DS_Store
+Thumbs.db
+
+# Project Scratch
+C:/Users/USER/.gemini/antigravity/brain/

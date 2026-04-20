@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Directorios | AGROIDEAS</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .tree-view {
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .tree-node {
+            margin-left: 1.5rem;
+            border-left: 1px solid var(--color-border);
+            padding-left: 1rem;
+            margin-top: 0.25rem;
+        }
+        .tree-node__name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .tree-node__icon { color: var(--color-secondary); }
+        
+        .code-container {
+            background-color: #1e293b;
+            color: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            position: relative;
+            margin-top: 1rem;
+        }
+        .code-container pre { margin: 0; font-size: 0.85rem; }
+        .btn-copy {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar__logo">AGROIDEAS GxP</div>
+            <nav>
+                <ul class="sidebar__nav">
+                    <li><a href="index.html" class="sidebar__link">📊 Dashboard</a></li>
+                    <li><a href="admin-ingesta.html" class="sidebar__link">📥 Ingesta de Datos</a></li>
+                    <li><a href="admin-directorios.html" class="sidebar__link sidebar__link--active">📂 Gestión de Directorios</a></li>
+                    <li><a href="inventario.html" class="sidebar__link">📂 Inventario</a></li>
+                    <li><a href="documentos-procesos.html" class="sidebar__link">📝 Doc. de Procesos</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header class="header">
+                <div>
+                    <h1 class="header__title">Arquitectura de Directorios</h1>
+                    <p class="header__subtitle">Previsualización de la estructura para Google Drive.</p>
+                </div>
+            </header>
+
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <h3>Vistas Previa del Árbol</h3>
+                        <p class="color-text-muted">Estructura calculada dinámicamente.</p>
+                    </div>
+                    <button class="btn btn--secondary" onclick="downloadLocalZip()">📦 Descargar Árbol Local (.ZIP)</button>
+                </div>
+                <div id="tree-container" class="tree-view" style="margin-top:1.5rem;">
+                    <!-- Tree rendered here -->
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                    <div>
+                        <h3>Automatización (Google Apps Script)</h3>
+                        <p class="color-text-muted">Lleve esta estructura a su Google Drive en segundos.</p>
+                    </div>
+                    <a href="https://script.google.com/home" target="_blank" class="btn btn--primary">🚀 Abrir Google Apps Script</a>
+                </div>
+
+                <!-- Guía Paso a Paso -->
+                <div class="guide-box">
+                    <div class="guide-step">
+                        <div class="guide-step__number">1</div>
+                        <div class="guide-step__text">Haga clic en el botón <b>"Copiar Código"</b> que aparece abajo.</div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="guide-step__number">2</div>
+                        <div class="guide-step__text">En la pestaña de Google Script, pulse en <b>"+ Nuevo proyecto"</b>.</div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="guide-step__number">3</div>
+                        <div class="guide-step__text">Borre el código existente y <b>pegue</b> el código generado.</div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="guide-step__number">4</div>
+                        <div class="guide-step__text">Pulse <b>"Ejecutar"</b>, autorice los permisos y ¡listo!</div>
+                    </div>
+                </div>
+
+                <div class="code-container">
+                    <button class="btn-copy" onclick="copyCode()">Copiar Código</button>
+                    <pre><code id="gas-code">Generando script...</code></pre>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/core-engine.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await db.bootstrap();
+            renderTree();
+            renderGAS();
+        });
+
+        function renderTree() {
+            const tree = core.buildTree();
+            const container = document.getElementById('tree-container');
+            container.innerHTML = '';
+            
+            function createNode(data, parentElement) {
+                for (let key in data) {
+                    const node = data[key];
+                    const div = document.createElement('div');
+                    div.className = 'tree-node';
+                    const icon = node.type === 'category' ? '📁' : '📄';
+                    div.innerHTML = `
+                        <div class="tree-node__name text-sm">
+                            <span class="tree-node__icon">${icon}</span>
+                            <span><b>${node.id || ''}</b> ${node.name || key}</span>
+                        </div>
+                    `;
+                    parentElement.appendChild(div);
+                    
+                    if (node.children && Object.keys(node.children).length > 0) {
+                        createNode(node.children, div);
+                    }
+                }
+            }
+            createNode(tree, container);
+        }
+
+        function renderGAS() {
+            document.getElementById('gas-code').textContent = core.generateGAS();
+        }
+
+        async function downloadLocalZip() {
+            const zip = new JSZip();
+            const tree = core.buildTree();
+            const rootFolder = zip.folder("SISTEMA_GxP_AGROIDEAS");
+
+            function addToZip(nodes, parentZip) {
+                for (let key in nodes) {
+                    const node = nodes[key];
+                    const name = node.id ? `${node.id} ${node.name}` : node.name;
+                    const folder = parentZip.folder(name);
+                    if (node.children && Object.keys(node.children).length > 0) {
+                        addToZip(node.children, folder);
+                    } else {
+                        folder.file("INFO.txt", `Proceso: ${name}\nFecha: ${new Date().toLocaleString()}`);
+                    }
+                }
+            }
+            addToZip(tree, rootFolder);
+            const content = await zip.generateAsync({ type: "blob" });
+            saveAs(content, "Estructura_GxP.zip");
+        }
+
+        function copyCode() {
+            const code = document.getElementById('gas-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('¡Código copiado al portapapeles!');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | AGROIDEAS GxP</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .ia-config-panel { margin-top: 1rem; border-top: 1px solid #f1f5f9; padding-top: 1rem; transition: all 0.3s ease; }
+        .toast {
+            position: fixed; top: 20px; right: 20px; 
+            padding: 1rem 2rem; border-radius: 8px; 
+            background: #059669; color: white; font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            transform: translateY(-100px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 9999; display: flex; align-items: center; gap: 0.5rem;
+        }
+        .toast.show { transform: translateY(0); }
+    </style>
+</head>
+<body>
+    <div id="ai-toast" class="toast">
+        <span>✅</span> <span id="toast-msg">IA Conectada con éxito</span>
+    </div>
+
+    <div class="app-container">
+        <!-- Sidebar and Content... (omitted for brevity in replace, but keeping structure) -->
+        <aside class="sidebar">
+            <div class="sidebar__logo">AGROIDEAS GxP</div>
+            <nav>
+                <ul class="sidebar__nav">
+                    <li><a href="index.html" class="sidebar__link sidebar__link--active">📊 Dashboard</a></li>
+                    <li><a href="admin-ingesta.html" class="sidebar__link">📥 Ingesta de Datos</a></li>
+                    <li><a href="admin-directorios.html" class="sidebar__link">📂 Gestión de Directorios</a></li>
+                    <li><a href="inventario.html" class="sidebar__link">📂 Inventario</a></li>
+                    <li><a href="documentos-procesos.html" class="sidebar__link">📝 Doc. de Procesos</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header class="header">
+                <div>
+                    <h1 class="header__title">Panel de Control</h1>
+                    <p class="header__subtitle">Estado de la sistematización de productos y procesos.</p>
+                </div>
+                <div style="display:flex; gap:0.8rem;">
+                    <button class="btn btn--primary" onclick="syncWithMaster()">🔄 Sincronizar Maestro</button>
+                    <button class="btn btn--outline" onclick="resetSystem()">Reiniciar Sistema</button>
+                </div>
+            </header>
+
+            <section class="data-grid">
+                <!-- Inventario -->
+                <div class="card">
+                    <h3>Inventario Maestro</h3>
+                    <p class="color-text-muted">Procesos de Nivel 1 a más registrados.</p>
+                    <div style="margin: 1.2rem 0;"><span id="badge-inv" class="status-badge">DETECTANDO...</span></div>
+                    <p id="count-inv" style="font-size: 2.5rem; font-weight: 800;">0</p>
+                    <p style="font-size: 0.8rem; color: var(--color-text-muted);">Registros cargados</p>
+                </div>
+
+                <!-- Mapa 0 -->
+                <div class="card">
+                    <h3>Mapa Nivel 0</h3>
+                    <p class="color-text-muted">Macroprocesos raíz activos.</p>
+                    <div style="margin: 1.2rem 0;"><span id="badge-n0" class="status-badge">DETECTANDO...</span></div>
+                    <p id="count-n0" style="font-size: 2.5rem; font-weight: 800;">0</p>
+                    <p style="font-size: 0.8rem; color: var(--color-text-muted);">Macroprocesos raíz</p>
+                </div>
+
+                <!-- Cerebro IA -->
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <h3 style="font-size:1.1rem;">IA Brain</h3>
+                        <select id="provider-select" class="form-control form-control--sm" style="width:110px; font-size:0.7rem;" onchange="saveConfig()">
+                            <option value="lm-studio">LM Studio</option>
+                            <option value="gemini">Google Gemini</option>
+                        </select>
+                    </div>
+                    <div style="margin: 1.2rem 0;"><span id="badge-ai" class="status-badge status-badge--pending">CARGANDO...</span></div>
+
+                    <!-- Config LM -->
+                    <div id="panel-lm" class="ia-config-panel">
+                        <label style="font-size:0.65rem; color:var(--color-text-muted);">LM Bearer Token</label>
+                        <input type="password" id="lm-token" class="form-control form-control--sm" onchange="saveConfig()">
+                    </div>
+
+                    <!-- Config Gemini -->
+                    <div id="panel-gemini" class="ia-config-panel" style="display:none;">
+                        <div class="form-group">
+                            <label style="font-size:0.65rem; color:var(--color-text-muted);">Gemini API Key</label>
+                            <input type="password" id="gemini-key" class="form-control form-control--sm" onchange="saveConfig()">
+                        </div>
+                        <div class="form-group" style="margin-top:0.5rem;">
+                            <label style="font-size:0.65rem; color:var(--color-text-muted);">Modelo</label>
+                            <input type="text" id="gemini-model" class="form-control form-control--sm" placeholder="gemini-1.5-pro" onchange="saveConfig()">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/core-engine.js"></script>
+    <script src="js/ai-handler.js"></script>
+    <script>
+        function showToast(msg) {
+            const toast = document.getElementById('ai-toast');
+            if (toast) {
+                document.getElementById('toast-msg').textContent = msg;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+        }
+
+        async function updateUI() {
+            try {
+                // 1. Inicializar desde Fuente Única de Verdad (JSON)
+                await db.bootstrap();
+
+                // 2. Cargar Datos Locales
+                const inv = db.get(db.DB_KEYS.INVENTARIO) || [];
+                const n0 = db.get(db.DB_KEYS.MAPA_NIVEL_0) || [];
+
+                document.getElementById('count-inv').textContent = inv.length;
+                document.getElementById('count-n0').textContent = n0.length;
+
+                const bInv = document.getElementById('badge-inv');
+                bInv.textContent = inv.length > 0 ? 'DATOS CARGADOS' : 'SISTEMA VACÍO';
+                bInv.className = `status-badge ${inv.length > 0 ? 'status-badge--success' : 'status-badge--warning'}`;
+
+                const bN0 = document.getElementById('badge-n0');
+                bN0.textContent = n0.length > 0 ? 'MAPA ACTIVO' : 'SIN MAPA';
+                bN0.className = `status-badge ${n0.length > 0 ? 'status-badge--success' : 'status-badge--warning'}`;
+
+                // 3. Cargar Configuración IA
+                const provider = localStorage.getItem('AI_PROVIDER') || 'lm-studio';
+                document.getElementById('provider-select').value = provider;
+                document.getElementById('lm-token').value = localStorage.getItem('LM_API_TOKEN') || '';
+                document.getElementById('gemini-key').value = localStorage.getItem('GEMINI_API_KEY') || '';
+                document.getElementById('gemini-model').value = localStorage.getItem('GEMINI_MODEL') || 'gemini-1.5-pro';
+
+                // Toggles de visibilidad
+                document.getElementById('panel-lm').style.display = provider === 'lm-studio' ? 'block' : 'none';
+                document.getElementById('panel-gemini').style.display = provider === 'gemini' ? 'block' : 'none';
+
+                // 4. Test Conexión Asíncrono
+                checkAIConnection().then(ok => {
+                    const bAi = document.getElementById('badge-ai');
+                    if (ok) {
+                        const name = provider === 'gemini' ? 'Google Gemini' : 'LM Studio';
+                        bAi.textContent = `${name.toUpperCase()} LISTO`;
+                        bAi.className = 'status-badge status-badge--success';
+                        showToast(`${name} conectado correctamente`);
+                    } else {
+                        bAi.textContent = 'SIN CONEXIÓN';
+                        bAi.className = 'status-badge status-badge--warning';
+                    }
+                });
+            } catch (e) {
+                console.error("Dashboard UI Error:", e);
+            }
+        }
+
+        function saveConfig() {
+            localStorage.setItem('AI_PROVIDER', document.getElementById('provider-select').value);
+            localStorage.setItem('LM_API_TOKEN', document.getElementById('lm-token').value);
+            localStorage.setItem('GEMINI_API_KEY', document.getElementById('gemini-key').value);
+            localStorage.setItem('GEMINI_MODEL', document.getElementById('gemini-model').value);
+            updateUI(); // Refrescar UI inmediatamente
+        }
+
+        function resetSystem() {
+            if(confirm('¿Reiniciar todo el sistema? Se perderán cambios manuales.')){
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        async function syncWithMaster() {
+            if(confirm('¿Sincronizar con el Inventario Maestro? Esto actualizará su base de datos local con la versión más reciente del servidor.')){
+                const ok = await db.forceLoadMaster();
+                if(ok) {
+                    showToast('Sincronización exitosa');
+                    updateUI();
+                } else {
+                    alert('Error al sincronizar con el archivo maestro.');
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', updateUI);
+    </script>
+</body>
+</html>

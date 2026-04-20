@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentos de Procesos | AGROIDEAS GxP</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .page-header-actions { display: flex; gap: 1rem; align-items: center; }
+        
+        .doc-accordion { margin-bottom: 0.8rem; border-radius: 12px; border: 1px solid var(--color-border); overflow: hidden; background: white; transition: var(--transition); }
+        .doc-accordion__summary { padding: 1.25rem 1.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #fff; transition: var(--transition); }
+        .doc-accordion__summary:hover { background: #f8fafc; }
+        .doc-accordion[open] { box-shadow: var(--shadow-md); }
+        .doc-accordion[open] > .doc-accordion__summary { border-bottom: 1px solid #f1f5f9; background: #f0fdf4; }
+
+        .doc-item { display: flex; align-items: center; justify-content: space-between; padding: 0.8rem 1.5rem; border-bottom: 1px solid #f8fafc; transition: var(--transition); }
+        .doc-item:hover { background: #f1f5f9; }
+        .doc-item__info { display: flex; gap: 15px; align-items: center; }
+        
+        .level-tag { font-size: 0.6rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; background: #e2e8f0; color: #475569; }
+        
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+        .modal-content { background: white; margin: 5% auto; padding: 2rem; border-radius: 16px; width: 60%; max-width: 800px; box-shadow: var(--shadow-lg); }
+        
+        .search-container { position: relative; flex: 1; }
+        .search-container input { width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border-radius: 10px; border: 1px solid var(--color-border); outline: none; }
+        .search-container::before { content: '🔍'; position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar__logo">AGROIDEAS GxP</div>
+            <nav>
+                <ul class="sidebar__nav">
+                    <li><a href="index.html" class="sidebar__link">📊 Dashboard</a></li>
+                    <li><a href="inventario.html" class="sidebar__link">📂 Inventario</a></li>
+                    <li><a href="admin-ingesta.html" class="sidebar__link">📥 Ingesta</a></li>
+                    <li><a href="documentos-procesos.html" class="sidebar__link sidebar__link--active">📝 Doc. de Procesos</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header class="header">
+                <div>
+                    <h1 class="header__title">Documentos de Procesos</h1>
+                    <p class="header__subtitle">Gestión de caracterizaciones y fichas técnicas por nivel.</p>
+                </div>
+                <div class="page-header-actions">
+                    <button class="btn btn--primary" onclick="openModal('mass')">📥 Carga Masiva (JSON)</button>
+                    <button class="btn btn--outline" onclick="openModal('single')">📄 Importar Ficha</button>
+                </div>
+            </header>
+
+            <!-- Barra de Filtros y Búsqueda -->
+            <div class="card" style="margin-bottom: 2rem; padding: 1.25rem; display: flex; gap: 1.5rem; align-items: center;">
+                <div style="display:flex; gap:0.5rem; border-right: 1px solid #e2e8f0; padding-right: 1.5rem;">
+                    <button class="btn btn--sm btn--primary filter-btn" data-cat="all" onclick="filterCat('all', this)">Todos</button>
+                    <button class="btn btn--sm btn--outline filter-btn" data-cat="E" onclick="filterCat('E', this)">Estratégicos</button>
+                    <button class="btn btn--sm btn--outline filter-btn" data-cat="M" onclick="filterCat('M', this)">Misionales</button>
+                    <button class="btn btn--sm btn--outline filter-btn" data-cat="S" onclick="filterCat('S', this)">Soporte</button>
+                </div>
+                <div class="search-container">
+                    <input type="text" id="main-search" placeholder="Buscar por código o denominación..." onkeyup="refreshUI()">
+                </div>
+            </div>
+
+            <div id="accordion-container">
+                <!-- Se poblará dinámicamente -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Ingesta -->
+    <div id="ingesta-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title" style="margin-bottom:1rem; color:var(--color-primary);">Carga Masiva de Documentos</h2>
+            <p style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:1.5rem;">Pegue el contenido JSON siguiendo el formato inmutable de MIDAGRI.</p>
+            <textarea id="json-input" class="form-control" style="width:100%; height:300px; font-family:monospace; font-size:0.75rem; padding:1rem; border-radius:8px; margin-bottom:1.5rem;" placeholder='[ { "fichaDeProductoYProceso": { ... } } ]'></textarea>
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
+                <button class="btn btn--outline" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn--primary" id="btn-inject" onclick="handleInjection()">Procesar e Inyectar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/core-engine.js"></script>
+    <script src="js/admin-manager.js"></script>
+    <script>
+        let currentCategory = 'all';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await db.bootstrap();
+            refreshUI();
+        });
+
+        function filterCat(cat, btn) {
+            currentCategory = cat;
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('btn--primary');
+                b.classList.add('btn--outline');
+            });
+            btn.classList.add('btn--primary');
+            btn.classList.remove('btn--outline');
+            refreshUI();
+        }
+
+        function refreshUI() {
+            const container = document.getElementById('accordion-container');
+            const search = document.getElementById('main-search').value.toLowerCase();
+            const tree = core.buildTree();
+            
+            container.innerHTML = '';
+
+            Object.keys(tree).forEach(catName => {
+                const catData = tree[catName];
+                const catCode = catName.charAt(0);
+                
+                if (currentCategory !== 'all' && catCode !== currentCategory) return;
+                
+                // Secciones por Macroproceso (Acordeón Nivel 0)
+                Object.keys(catData.children).sort().forEach(l0Code => {
+                    const node = catData.children[l0Code];
+                    
+                    // Si hay búsqueda, filtrar. Si el Macro no coincide, buscar en hijos.
+                    const matchesSearch = node.id.toLowerCase().includes(search) || node.name.toLowerCase().includes(search);
+                    const childMatches = hasMatchingChild(node, search);
+
+                    if (search && !matchesSearch && !childMatches) return;
+
+                    const details = document.createElement('details');
+                    details.className = 'doc-accordion';
+                    details.innerHTML = `
+                        <summary class="doc-accordion__summary">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <span style="font-size:1.2rem;">📂</span>
+                                <div>
+                                    <span class="level-tag">Nivel 0</span>
+                                    <span style="font-weight:700; color:var(--color-primary);">${node.id}</span>
+                                    <span style="font-size:0.95rem; font-weight:600;">${node.name}</span>
+                                </div>
+                            </div>
+                            <button class="btn btn--sm btn--primary" onclick="event.preventDefault(); window.location.href='editor-ficha.html?code=${node.id}'">📄 Ficha Macro</button>
+                        </summary>
+                        <div class="doc-accordion__content">
+                            ${renderChildren(node, search)}
+                        </div>
+                    `;
+                    container.appendChild(details);
+                    if (search) details.open = true;
+                });
+            });
+        }
+
+        function hasMatchingChild(node, search) {
+            if (!node.children) return false;
+            return Object.values(node.children).some(child => {
+                const match = child.id.toLowerCase().includes(search) || child.name.toLowerCase().includes(search);
+                return match || hasMatchingChild(child, search);
+            });
+        }
+
+        function renderChildren(node, search) {
+            if (!node.children || Object.keys(node.children).length === 0) return '';
+            
+            let html = '';
+            Object.keys(node.children).sort().forEach(code => {
+                const child = node.children[code];
+                const matches = !search || child.id.toLowerCase().includes(search) || child.name.toLowerCase().includes(search) || hasMatchingChild(child, search);
+                
+                if (!matches) return;
+
+                html += `
+                    <div class="doc-item" style="padding-left: ${child.level * 1.5}rem;">
+                        <div class="doc-item__info">
+                            <span style="font-size: 1rem;">${Object.keys(child.children).length > 0 ? '📁' : '📄'}</span>
+                            <div>
+                                <span class="level-tag">Nnivel ${child.level}</span>
+                                <span style="font-weight:700; font-size:0.85rem;">${child.id}</span>
+                                <span style="font-size:0.85rem; color:#334155;">${child.name}</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn btn--sm btn--outline" onclick="window.location.href='editor-ficha.html?code=${child.id}'">Editar Ficha</button>
+                        </div>
+                    </div>
+                `;
+                html += renderChildren(child, search);
+            });
+            return html;
+        }
+
+        // Modal Logic
+        function openModal(mode) {
+            const modal = document.getElementById('ingesta-modal');
+            const title = document.getElementById('modal-title');
+            const input = document.getElementById('json-input');
+            
+            modal.style.display = 'block';
+            if(mode === 'mass') {
+                title.textContent = 'Carga Masiva de Fichas (JSON)';
+                input.placeholder = '[ { "fichaDeProductoYProceso": { ... } }, ... ]';
+            } else {
+                title.textContent = 'Importar Ficha Individual';
+                input.placeholder = '{ "fichaDeProductoYProceso": { "codigo": "E.01.01", ... } }';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('ingesta-modal').style.display = 'none';
+        }
+
+        function handleInjection() {
+            const val = document.getElementById('json-input').value;
+            try {
+                const data = JSON.parse(val);
+                admin.injectFichas(data);
+                alert('✅ Procesamiento completado. Los documentos han sido integrados al sistema GxP.');
+                closeModal();
+                refreshUI();
+            } catch (e) {
+                alert('❌ Error de validación: El formato JSON no es válido.');
+            }
+        }
+    </script>
+</body>
+</html>

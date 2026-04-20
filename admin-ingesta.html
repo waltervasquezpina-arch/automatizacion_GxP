@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Arquitectura | AGROIDEAS</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .management-grid { display: grid; grid-template-columns: 450px 1fr; gap: 2rem; align-items: start; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar__logo">AGROIDEAS GxP</div>
+            <nav>
+                <ul class="sidebar__nav">
+                    <li><a href="index.html" class="sidebar__link">📊 Dashboard</a></li>
+                    <li><a href="admin-ingesta.html" class="sidebar__link sidebar__link--active">📥 Ingesta de Datos</a></li>
+                    <li><a href="admin-directorios.html" class="sidebar__link">📂 Gestión de Directorios</a></li>
+                    <li><a href="inventario.html" class="sidebar__link">📂 Inventario</a></li>
+                    <li><a href="documentos-procesos.html" class="sidebar__link">📝 Doc. de Procesos</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header class="header">
+                <div>
+                    <h1 class="header__title">Arquitectura de Procesos</h1>
+                    <p class="header__subtitle">Módulo de ingesta inteligente y gestión de jerarquías.</p>
+                </div>
+            </header>
+
+            <div class="management-grid">
+                <!-- Columna Izquierda: Ingesta -->
+                <div class="card">
+                    <h3 style="margin-bottom:1rem;">🤖 Ingesta con Cerebro IA</h3>
+                    <p class="color-text-muted" style="font-size:0.8rem; margin-bottom:1.5rem;">Suba el PDF para que la IA extraiga los niveles automáticamente.</p>
+                    
+                    <div class="dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
+                        <p id="drop-text">Arrastre el PDF aquí o haga clic</p>
+                        <input type="file" id="fileInput" hidden>
+                    </div>
+
+                    <div id="ai-status" style="display:none; margin:1rem 0;"></div>
+
+                    <textarea id="json-input" class="form-control" style="width:100%; height:150px; margin-top:1.5rem; font-family:monospace; font-size:0.75rem;" placeholder="JSON Result..."></textarea>
+                    
+                    <div style="margin-top:1.5rem; display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem; margin-bottom:1rem;">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:0.7rem;">Modo de Inyección</label>
+                            <select id="inject-mode" class="form-control form-control--sm">
+                                <option value="append">➕ Añadir a lo existente</option>
+                                <option value="replace">🔄 Sobrescribir Todo</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:0.7rem;">Formato Origen</label>
+                            <select id="format-mode" class="form-control form-control--sm">
+                                <option value="auto">✨ Normalización Auto</option>
+                                <option value="strict">🔒 JSON Estricto</option>
+                                <option value="ficha">📄 Fichas Técnicas (GxP)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:1rem;">
+                        <button class="btn btn--primary" id="btnProcesar" style="flex:1;">Procesar IA</button>
+                        <button class="btn btn--secondary" onclick="handleBatchInjection()" style="flex:1;">Inyectar JSON</button>
+                    </div>
+
+                    <div style="margin-top:1rem; display:flex; gap:0.5rem;">
+                         <button class="btn btn--outline btn--sm" onclick="document.getElementById('json-input').value = ''" style="flex:1;">Limpiar Editor</button>
+                    </div>
+
+                    <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--color-border);">
+                        <h4>📋 Guía de Estructura GxP</h4>
+                        <p class="color-text-muted" style="font-size:0.7rem; margin-top:0.5rem;">Use este formato para asegurar la compatibilidad con el sistema.</p>
+                        <pre style="background:#f8fafc; padding:0.8rem; border-radius:6px; font-size:0.65rem; margin-top:0.8rem; border:1px solid #e2e8f0; overflow-x:auto;">
+[
+  {
+    "codigo_nivel_0": "S.XX",
+    "denominacion_nivel_0": "Valor",
+    "codigo_nivel_1": "S.XX.01",
+    "denominacion_nivel_1": "Valor",
+    "codigo_nivel_2": "...",
+    "denominacion_nivel_2": "..."
+  }
+]</pre>
+                        <button class="btn btn--outline btn--sm" style="width:100%; margin-top:0.8rem;" onclick="copyTemplate()">Copiar Formato Guía</button>
+                    </div>
+
+                    <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid var(--color-border);">
+                        <h4>Mantenimiento</h4>
+                        <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem;">
+                            <div style="display:flex; gap:0.5rem;">
+                                <button class="btn btn--outline btn--sm" style="flex:1;" onclick="clearDB()">Vaciar DB</button>
+                                <button class="btn btn--outline btn--sm" style="flex:1;" onclick="resetSeeds()">Recargar Semilla</button>
+                            </div>
+                            <button class="btn btn--primary btn--sm" style="width:100%;" onclick="syncWithMaster()">🔄 Sincronizar con Maestro (.json)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Árbol Editable -->
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                        <h3>🌳 Gestor de Estructura Visual</h3>
+                        <button class="btn btn--outline btn--sm" onclick="admin.refreshTree()">🔄 Actualizar</button>
+                    </div>
+                    <div id="visual-editor-tree" class="visual-editor" style="max-height:70vh;">
+                        <!-- Renderizado por admin-manager.js -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modales... -->
+    <div id="edit-modal" class="detail-panel" style="right:-600px; width:450px;">
+        <div class="detail-panel__close" onclick="admin.closeModal()">✕</div>
+        <h2 id="modal-title" style="margin-bottom:2rem;">Detalle del Nodo</h2>
+        <div class="form-group">
+            <label>Código</label>
+            <input type="text" id="edit-code" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label>Denominación</label>
+            <textarea id="edit-name" class="form-control" rows="4"></textarea>
+        </div>
+        <div style="margin-top:2rem;">
+            <button class="btn btn--primary" id="btn-save-edit" style="width:100%;">Guardar Cambios</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/storage.js"></script>
+    <script src="js/core-engine.js"></script>
+    <script src="js/ai-handler.js"></script>
+    <script src="js/admin-manager.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await db.bootstrap();
+            if(typeof admin !== 'undefined') admin.refreshTree();
+        });
+
+        // Configuración Drag & Drop
+        const dropzone = document.getElementById('dropzone');
+        dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.style.borderColor = 'var(--color-primary)'; });
+        dropzone.addEventListener('dragleave', () => { dropzone.style.borderColor = '#e2e8f0'; });
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = '#e2e8f0';
+            const files = e.dataTransfer.files;
+            if(files.length) { document.getElementById('fileInput').files = files; handleFileSelection(files[0].name); }
+        });
+
+        document.getElementById('fileInput').onchange = (e) => {
+            if (e.target.files.length > 0) handleFileSelection(e.target.files[0].name);
+        };
+
+        function handleFileSelection(name) { document.getElementById('drop-text').textContent = "Seleccionado: " + name; }
+
+        // Lógica de Procesar IA
+        document.getElementById('btnProcesar').onclick = async function() {
+            const status = document.getElementById('ai-status');
+            const jsonArea = document.getElementById('json-input');
+            const providerKey = localStorage.getItem('AI_PROVIDER') || 'lm-studio';
+            const providerName = providerKey === 'gemini' ? 'Google Gemini' : 'LM Studio';
+
+            if(!document.getElementById('fileInput').files.length) return alert('Suba un PDF primero.');
+
+            status.innerHTML = `<span class="status-badge status-badge--pending">Procesando con ${providerName}...</span>`;
+            status.style.display = 'block';
+            jsonArea.value = `🧠 ${providerName} analizando...`;
+
+            try {
+                const response = await getAICompletion("Analiza el PDF y extrae jerarquía JSON.");
+                jsonArea.value = response;
+                alert('¡Análisis completado!');
+            } catch(e) {
+                alert('Error IA: ' + e.message);
+                jsonArea.value = '[\n  {\n    "codigo_nivel_0": "S.01",\n    "denominacion_nivel_0": "Gestión Administrativa",\n    "codigo_nivel_1": "S.01.05",\n    "denominacion_nivel_1": "Proceso Extraído por IA"\n  }\n]';
+            } finally {
+                status.style.display = 'none';
+            }
+        };
+
+        async function handleBatchInjection() {
+            const val = document.getElementById('json-input').value;
+            const mode = document.getElementById('inject-mode').value;
+            const format = document.getElementById('format-mode').value;
+
+            if(!val) return alert('Pegue un JSON primero.');
+            
+            try {
+                const data = JSON.parse(val);
+                if(typeof admin !== 'undefined') {
+                    if (format === 'ficha') {
+                        admin.injectFichas(data);
+                        alert('¡Fichas inyectadas con éxito!');
+                    } else {
+                        admin.injectBatch(data, mode === 'append', format === 'auto');
+                        alert('¡Inyección de inventario completada!');
+                    }
+                    document.getElementById('json-input').value = '';
+                }
+            } catch(e) {
+                alert('Error en el JSON: ' + e.message);
+            }
+        }
+
+        function saveToDB() {
+            handleBatchInjection();
+        }
+
+        function copyTemplate() {
+            const template = [
+                {
+                    "codigo_nivel_0": "E.01",
+                    "denominacion_nivel_0": "Gestión Estratégica",
+                    "codigo_nivel_1": "E.01.01",
+                    "denominacion_nivel_1": "Gestión del planeamiento institucional",
+                    "codigo_nivel_2": "E.01.01.01",
+                    "denominacion_nivel_2": "Diseño de la política...",
+                }
+            ];
+            const el = document.createElement('textarea');
+            el.value = JSON.stringify(template, null, 2);
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert('Plantilla copiada al portapapeles. Pégala en Gemini o en Excel.');
+        }
+
+        function clearDB() { if(confirm('¿Vaciar?')) { localStorage.clear(); location.reload(); } }
+        async function resetSeeds() { if(confirm('¿Recargar Semilla?')) { localStorage.clear(); await db.bootstrap(); location.reload(); } }
+        async function syncWithMaster() {
+            if(confirm('¿Sincronizar con el Inventario Maestro? Esto actualizará su base de datos local con la versión más reciente del servidor.')){
+                const ok = await db.forceLoadMaster();
+                if(ok) {
+                    alert('Sincronización exitosa. El sistema se recargará.');
+                    location.reload();
+                } else {
+                    alert('Error al sincronizar con el archivo maestro.');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
