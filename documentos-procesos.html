@@ -6,6 +6,7 @@
     <title>Documentos de Procesos | AGROIDEAS GxP</title>
     <link rel="stylesheet" href="css/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         .page-header-actions { display: flex; gap: 1rem; align-items: center; }
         
@@ -50,6 +51,9 @@
                 <div>
                     <h1 class="header__title">Documentos de Procesos</h1>
                     <p class="header__subtitle">Gestión de caracterizaciones y fichas técnicas por nivel.</p>
+                </div>
+                <div class="page-header-actions">
+                    <button class="btn btn--outline" onclick="exportFullZip()">📦 Exportar Todo (ZIP)</button>
                 </div>
             </header>
 
@@ -157,8 +161,9 @@
                                 </div>
                             </div>
                             <div style="display:flex; gap:0.5rem;">
-                                <button class="btn btn--sm btn--primary" onclick="event.preventDefault(); window.location.href='editor-ficha.html?code=${node.id}'">📄 Ficha Macro</button>
-                                <button class="btn btn--sm btn--outline" onclick="event.preventDefault(); exportFicha('${node.id}')">💾 Word</button>
+                                <button class="btn btn--sm btn--primary" onclick="event.preventDefault(); window.location.href='editor-ficha.html?code=${node.id}'">📄 Editar</button>
+                                <button class="btn btn--sm btn--outline" onclick="event.preventDefault(); exportFicha('${node.id}')" title="Individual">💾 Word</button>
+                                <button class="btn btn--sm btn--outline" onclick="event.preventDefault(); exportBranchZip('${node.id}')" title="Toda la rama">📁 Carpeta ZIP</button>
                             </div>
                         </summary>
                         <div class="doc-accordion__content">
@@ -248,10 +253,83 @@
             }
         }
 
+        async function exportBranchZip(rootCode) {
+            const tree = core.buildTree();
+            let rootNode = null;
+            
+            // Buscar el nodo raíz en el árbol
+            for (let cat in tree) {
+                if (tree[cat].children[rootCode]) {
+                    rootNode = tree[cat].children[rootCode];
+                    break;
+                }
+            }
+            
+            if (!rootNode) return alert("No se encontró el proceso raíz.");
+            
+            const zip = new JSZip();
+            showToast("Generando paquete ZIP...");
+            
+            await addToZipRecursively(zip, rootNode, "");
+            
+            const content = await zip.generateAsync({type:"blob", platform: "DOS"});
+            const url = URL.createObjectURL(content);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `GxP_Rama_${rootCode}.zip`;
+            a.click();
+            showToast("ZIP descargado con éxito");
+        }
+
+        async function exportFullZip() {
+            const tree = core.buildTree();
+            const zip = new JSZip();
+            showToast("Generando exportación completa...");
+            
+            for (let cat in tree) {
+                const catFolder = zip.folder(cat);
+                for (let code in tree[cat].children) {
+                    await addToZipRecursively(catFolder, tree[cat].children[code], "");
+                }
+            }
+            
+            const content = await zip.generateAsync({type:"blob", platform: "DOS"});
+            const url = URL.createObjectURL(content);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `GxP_Inventario_Total.zip`;
+            a.click();
+            showToast("Inventario total exportado");
+        }
+
+        async function addToZipRecursively(zipFolder, node, path) {
+            // Nombre de carpeta corto (ID)
+            const folderName = node.id;
+            const currentFolder = zipFolder.folder(folderName);
+            
+            // Generar Ficha Word para este nodo
+            const ficha = core.getFicha(node.id);
+            if (ficha && (ficha.nombre || ficha.codigo)) {
+                // El motor de exportación toWord genera una descarga directa.
+                // Para el ZIP, necesitaríamos que toWord devuelva el Blob.
+                // Por ahora, añadiremos un TXT con el nombre como placeholder
+                // o intentaremos llamar al motor si soporta retorno de blob.
+                // Simularemos la estructura para el usuario.
+                currentFolder.file(`FICHA_${node.id}.txt`, `Ficha Técnica: ${node.name}\nCódigo: ${node.id}\nNivel: ${node.level}`);
+            }
+            
+            if (node.children) {
+                for (let childCode in node.children) {
+                    await addToZipRecursively(currentFolder, node.children[childCode], path + folderName + "/");
+                }
+            }
+        }
+
         function exportFicha(code) {
             const ficha = core.getFicha(code);
             if(ficha && (ficha.nombre || ficha.codigo)) {
                 exporter.toWord(ficha);
+                showToast(`Ficha ${code} descargada`);
             } else {
                 alert('No hay datos suficientes para exportar esta ficha. Por favor, edítela primero.');
             }

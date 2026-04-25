@@ -68,11 +68,20 @@
         <span id="toast-msg">Mensaje</span>
     </div>
 
-    <!-- Scripts -->
     <script src="js/storage.js"></script>
     <script src="js/core-engine.js"></script>
+    <script src="js/export-engine.js"></script>
     <script src="js/admin-manager.js"></script>
     <script>
+        function exportFicha(code) {
+            const ficha = core.getFicha(code);
+            if(ficha && (ficha.nombre || ficha.codigo)) {
+                exporter.toWord(ficha);
+                showToast(`Ficha ${code} descargada`);
+            } else {
+                alert('No hay datos suficientes para exportar esta ficha. Por favor, edítela primero.');
+            }
+        }
         function showToast(msg) {
             const toast = document.getElementById('toast');
             if (toast) {
@@ -168,7 +177,10 @@
                             <span style="color: #475569; font-size: 0.95rem;">${node.name}</span>
                         </div>
                     </div>
-                    <div class="actions">
+                    <div class="actions" style="display:flex; gap:8px;">
+                        <button class="btn btn--outline btn--sm" onclick="event.preventDefault(); exportFicha('${code}')" title="Descargar Word">
+                            💾
+                        </button>
                         <button class="btn btn--primary btn--sm" onclick="event.preventDefault(); window.location.href='editor-ficha.html?code=${code}'">
                             📝 Gestionar Ficha
                         </button>
