@@ -117,9 +117,20 @@
                     </div>
                 </div>
 
-                <div class="code-container">
-                    <button class="btn-copy" onclick="copyCode()">Copiar Código</button>
-                    <pre><code id="gas-code">Generando script...</code></pre>
+                <div class="accordion" id="gas-accordion">
+                    <div class="accordion__header" onclick="this.parentElement.classList.toggle('accordion--open')">
+                        <div>
+                            <span style="font-weight:700; color:var(--color-primary);">📄 Ver Código Fuente del Script</span>
+                            <p style="font-size:0.75rem; color:var(--color-text-muted);">Pulse para expandir el código generado.</p>
+                        </div>
+                        <span class="tree-node__arrow">▶</span>
+                    </div>
+                    <div class="accordion__content">
+                        <div class="code-container" style="margin-top:0;">
+                            <button class="btn-copy" onclick="copyCode()">Copiar Código</button>
+                            <pre><code id="gas-code">Generando script...</code></pre>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
