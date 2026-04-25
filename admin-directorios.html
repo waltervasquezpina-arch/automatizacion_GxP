@@ -142,26 +142,51 @@
             const container = document.getElementById('tree-container');
             container.innerHTML = '';
             
-            function createNode(data, parentElement) {
+            function createNode(data, parentElement, depth = 0) {
                 for (let key in data) {
                     const node = data[key];
+                    const hasChildren = node.children && Object.keys(node.children).length > 0;
+                    
                     const div = document.createElement('div');
                     div.className = 'tree-node';
-                    const icon = node.type === 'category' ? '📁' : '📄';
+                    const icon = node.type === 'category' ? '📁' : (hasChildren ? '📂' : '📄');
+                    
                     div.innerHTML = `
-                        <div class="tree-node__name text-sm">
+                        <div class="tree-node__name text-sm ${hasChildren ? 'cursor-pointer hover:bg-gray-200' : ''}" 
+                             style="padding: 2px 5px; border-radius: 4px;"
+                             onclick="${hasChildren ? 'toggleTreeNode(this)' : ''}">
                             <span class="tree-node__icon">${icon}</span>
                             <span><b>${node.id || ''}</b> ${node.name || key}</span>
+                            ${hasChildren ? '<span class="toggle-arrow" style="font-size:0.7rem; margin-left:auto; transition: transform 0.2s;">▶</span>' : ''}
                         </div>
+                        <div class="tree-node__children ${depth >= 1 && hasChildren ? 'hidden' : ''}"></div>
                     `;
                     parentElement.appendChild(div);
                     
-                    if (node.children && Object.keys(node.children).length > 0) {
-                        createNode(node.children, div);
+                    if (hasChildren) {
+                        const childrenContainer = div.querySelector('.tree-node__children');
+                        createNode(node.children, childrenContainer, depth + 1);
+                        
+                        // Rotar flecha si está visible (depth 0)
+                        if (depth === 0) {
+                            const arrow = div.querySelector('.toggle-arrow');
+                            if(arrow) arrow.style.transform = 'rotate(90deg)';
+                        }
                     }
                 }
             }
             createNode(tree, container);
+        }
+
+        function toggleTreeNode(element) {
+            const children = element.nextElementSibling;
+            const arrow = element.querySelector('.toggle-arrow');
+            if (children) {
+                const isHidden = children.classList.toggle('hidden');
+                if (arrow) {
+                    arrow.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(90deg)';
+                }
+            }
         }
 
         function renderGAS() {
