@@ -176,18 +176,28 @@
             function addToZip(nodes, parentZip) {
                 for (let key in nodes) {
                     const node = nodes[key];
-                    const name = node.id ? `${node.id} ${node.name}` : node.name;
-                    const folder = parentZip.folder(name);
+                    // Usar solo el ID para evitar rutas largas en Windows
+                    const folderName = node.id || node.name || key;
+                    const folder = parentZip.folder(folderName);
+                    
                     if (node.children && Object.keys(node.children).length > 0) {
                         addToZip(node.children, folder);
                     } else {
-                        folder.file("INFO.txt", `Proceso: ${name}\nFecha: ${new Date().toLocaleString()}`);
+                        // Crear un archivo marcador para que la carpeta no esté vacía
+                        folder.file("INFO_PROCESO.txt", `Código: ${node.id || 'N/A'}\nNombre: ${node.name}\nGenerado: ${new Date().toLocaleString()}`);
                     }
                 }
             }
             addToZip(tree, rootFolder);
-            const content = await zip.generateAsync({ type: "blob" });
-            saveAs(content, "Estructura_GxP.zip");
+            
+            // Generar con opciones de compatibilidad para Windows
+            const content = await zip.generateAsync({ 
+                type: "blob",
+                compression: "DEFLATE",
+                compressionOptions: { level: 6 },
+                platform: "DOS" 
+            });
+            saveAs(content, `Estructura_GxP_${new Date().getTime()}.zip`);
         }
 
         function copyCode() {

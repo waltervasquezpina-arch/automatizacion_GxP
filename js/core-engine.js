@@ -170,7 +170,8 @@ class CoreEngine {
 function process(parent, data) {
   for(let k in data) {
     let node = data[k];
-    let folder = parent.createFolder(node.name || k);
+    let folderName = node.id || node.name || k;
+    let folder = parent.createFolder(folderName);
     if(node.children) process(folder, node.children);
   }
 }`;
