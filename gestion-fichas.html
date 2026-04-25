@@ -34,10 +34,13 @@
         </aside>
 
         <main class="content">
-            <header class="header">
                 <div>
                     <h1 class="header__title">Sistematización de Fichas de Procesos</h1>
                     <p class="header__subtitle">Gestione la documentación técnica y caracterización según la Norma 002-2025.</p>
+                </div>
+                <div style="display:flex; gap:1rem;">
+                    <button class="btn btn--primary" onclick="openModal('mass')">📥 Carga Masiva (JSON)</button>
+                    <button class="btn btn--outline" onclick="openModal('single')">📄 Importar Ficha</button>
                 </div>
             </header>
 
@@ -47,10 +50,73 @@
         </main>
     </div>
 
+    <!-- Modal de Ingesta -->
+    <div id="ingesta-modal" class="modal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);">
+        <div class="modal-content" style="background: white; margin: 5% auto; padding: 2.5rem; border-radius: 16px; width: 60%; max-width: 800px; box-shadow: var(--shadow-lg); position: relative;">
+            <h2 id="modal-title" style="margin-bottom:1rem; color:var(--color-primary);">Carga Masiva de Fichas</h2>
+            <p style="font-size:0.8rem; color:var(--color-text-muted); margin-bottom:1.5rem;">Pegue el contenido JSON siguiendo el formato inmutable de MIDAGRI.</p>
+            <textarea id="json-input" class="form-control" style="width:100%; height:300px; font-family:monospace; font-size:0.75rem; padding:1rem; border-radius:8px; margin-bottom:1.5rem; border:1px solid var(--color-border);" placeholder='[ { "fichaDeProductoYProceso": { ... } } ]'></textarea>
+            <div style="display:flex; justify-content:flex-end; gap:12px;">
+                <button class="btn btn--outline" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn--primary" onclick="handleInjection()">Procesar e Inyectar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificaciones -->
+    <div id="toast" class="toast" style="position: fixed; top: 20px; right: 20px; padding: 1rem 2rem; border-radius: 8px; background: #059669; color: white; font-weight: 600; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); transform: translateY(-100px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999; display: flex; align-items: center; gap: 0.5rem;">
+        <span id="toast-msg">Mensaje</span>
+    </div>
+
     <!-- Scripts -->
     <script src="js/storage.js"></script>
     <script src="js/core-engine.js"></script>
+    <script src="js/admin-manager.js"></script>
     <script>
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                document.getElementById('toast-msg').textContent = msg;
+                toast.style.transform = 'translateY(0)';
+                setTimeout(() => toast.style.transform = 'translateY(-100px)', 3000);
+            }
+        }
+
+        function openModal(mode) {
+            const modal = document.getElementById('ingesta-modal');
+            const title = document.getElementById('modal-title');
+            const input = document.getElementById('json-input');
+            
+            modal.style.display = 'block';
+            if(mode === 'mass') {
+                title.textContent = 'Carga Masiva de Fichas (JSON)';
+                input.placeholder = '[ { "fichaDeProductoYProceso": { ... } }, ... ]';
+            } else {
+                title.textContent = 'Importar Ficha Individual';
+                input.placeholder = '{ "fichaDeProductoYProceso": { "codigo": "E.01.01", ... } }';
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('ingesta-modal').style.display = 'none';
+        }
+
+        function handleInjection() {
+            const val = document.getElementById('json-input').value;
+            if(!val) return alert("Por favor, pegue el contenido JSON.");
+            
+            try {
+                const data = JSON.parse(val);
+                if(typeof admin !== 'undefined') {
+                    admin.injectFichas(data);
+                    showToast("Fichas integradas correctamente");
+                    closeModal();
+                    renderAccordion();
+                }
+            } catch (e) {
+                alert('❌ Error de validación: El formato JSON no es válido.');
+            }
+        }
         document.addEventListener('DOMContentLoaded', async () => {
             await db.bootstrap();
             renderAccordion();
