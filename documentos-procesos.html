@@ -161,7 +161,6 @@
                                 </div>
                             </div>
                             <div style="display:flex; gap:0.5rem;">
-                                <button class="btn btn--sm btn--primary" onclick="event.preventDefault(); window.location.href='editor-ficha.html?code=${node.id}'">📄 Editar</button>
                                 <button class="btn btn--sm btn--outline" onclick="event.preventDefault(); exportFicha('${node.id}')" title="Individual">💾 Word</button>
                                 <button class="btn btn--sm btn--outline" onclick="event.preventDefault(); exportBranchZip('${node.id}')" title="Toda la rama">📁 Carpeta ZIP</button>
                             </div>
@@ -205,8 +204,7 @@
                             </div>
                         </div>
                         <div style="display:flex; gap:8px;">
-                            <button class="btn btn--sm btn--primary" onclick="window.location.href='editor-ficha.html?code=${child.id}'">Editar</button>
-                            <button class="btn btn--sm btn--outline" onclick="exportFicha('${child.id}')" title="Exportar a Word">📄</button>
+                            <button class="btn btn--sm btn--outline" onclick="exportFicha('${child.id}')" title="Exportar a Word">📄 Word</button>
                         </div>
                     </div>
                 `;
