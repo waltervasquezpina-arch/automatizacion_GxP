@@ -100,7 +100,7 @@
                     </div>
 
                     <div style="margin-top:1.5rem; display:flex; justify-content:space-between; align-items:center; padding-top:1rem; border-top:1px dashed var(--color-border);">
-                         <button class="btn btn--outline btn--sm" onclick="document.getElementById('json-input').value = ''">Limpiar Editor</button>
+                         <button class="btn btn--outline btn--sm" onclick="clearEditor()">Limpiar Editor</button>
                          <div style="display:flex; gap:1rem;">
                              <button class="btn btn--outline btn--sm" onclick="downloadResult()">💾 Descargar JSON</button>
                              <button class="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded-md shadow-md transform transition hover:-translate-y-1 active:translate-y-0" onclick="handleBatchInjection()" aria-label="Inyectar datos al sistema">⚡ Inyectar al Sistema</button>
@@ -162,6 +162,13 @@
     <script src="js/ai-handler.js"></script>
     <script src="js/admin-manager.js"></script>
     <script>
+        function clearEditor() {
+            document.getElementById('json-input').value = '';
+            document.getElementById('drop-text').textContent = 'Arrastre el archivo original aquí o haga clic';
+            document.getElementById('fileInput').value = '';
+            showToast("Editor limpiado");
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
             await db.bootstrap();
             if(typeof admin !== 'undefined') admin.refreshTree();

@@ -39,19 +39,25 @@ class AdminManager {
         const div = document.createElement('div');
         div.className = `admin-node admin-node--level-${node.level}`;
         
+        // Determinar si tiene hijos para el estilo del acordeón
+        const hasChildren = node.children && Object.keys(node.children).length > 0;
+        
         div.innerHTML = `
-            <div class="admin-node__header">
+            <div class="admin-node__header ${hasChildren ? 'admin-node__header--has-children' : ''}" 
+                 onclick="${hasChildren ? `admin.toggleNode(this, event)` : ''}">
                 <div class="admin-node__info">
                     <span class="node-code">${code}</span>
                     <span class="admin-node__name">${node.name}</span>
+                    <span class="admin-node__level-tag">Nivel ${node.level}</span>
+                    ${hasChildren ? '<span class="admin-node__toggle-icon">▼</span>' : ''}
                 </div>
-                <div class="admin-node__tools">
+                <div class="admin-node__tools" onclick="event.stopPropagation()">
                     <button class="btn-tool" onclick="admin.openEdit('${code}', '${node.name}')" title="Editar">✏️</button>
                     <button class="btn-tool" onclick="admin.openAddChild('${code}')" title="Añadir hijo">➕</button>
                     ${node.level > 0 ? `<button class="btn-tool btn-tool--danger" onclick="admin.deleteNode('${code}')" title="Eliminar">🗑️</button>` : ''}
                 </div>
             </div>
-            <div class="admin-node__children"></div>
+            <div class="admin-node__children ${node.level >= 1 && hasChildren ? 'admin-node__children--collapsed' : ''}"></div>
         `;
 
         const childrenContainer = div.querySelector('.admin-node__children');
@@ -62,6 +68,22 @@ class AdminManager {
         }
 
         return div;
+    }
+
+    toggleNode(header, event) {
+        // Evitar que el clic en herramientas active el acordeón
+        if (event.target.closest('.admin-node__tools')) return;
+
+        const node = header.closest('.admin-node');
+        const children = node.querySelector('.admin-node__children');
+        const icon = header.querySelector('.admin-node__toggle-icon');
+
+        if (children) {
+            const isCollapsed = children.classList.toggle('admin-node__children--collapsed');
+            if (icon) {
+                icon.style.transform = isCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)';
+            }
+        }
     }
 
     openEdit(code, name) {
