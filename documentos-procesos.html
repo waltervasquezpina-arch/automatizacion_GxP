@@ -89,11 +89,24 @@
         </div>
     </div>
 
+    <!-- Notificaciones -->
+    <div id="toast" class="toast" style="position: fixed; top: 20px; right: 20px; padding: 1rem 2rem; border-radius: 8px; background: #059669; color: white; font-weight: 600; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); transform: translateY(-100px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 9999; display: flex; align-items: center; gap: 0.5rem;">
+        <span id="toast-msg">Mensaje</span>
+    </div>
+
     <script src="js/storage.js"></script>
     <script src="js/core-engine.js"></script>
     <script src="js/export-engine.js"></script>
     <script src="js/admin-manager.js"></script>
     <script>
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            if (toast) {
+                document.getElementById('toast-msg').textContent = msg;
+                toast.style.transform = 'translateY(0)';
+                setTimeout(() => toast.style.transform = 'translateY(-100px)', 3000);
+            }
+        }
         let currentCategory = 'all';
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -185,7 +198,7 @@
                         <div class="doc-item__info">
                             <span style="font-size: 1rem;">${Object.keys(child.children).length > 0 ? '📁' : '📄'}</span>
                             <div>
-                                <span class="level-tag">Nnivel ${child.level}</span>
+                                <span class="level-tag">Nivel ${child.level}</span>
                                 <span style="font-weight:700; font-size:0.85rem;">${child.id}</span>
                                 <span style="font-size:0.85rem; color:#334155;">${child.name}</span>
                             </div>
@@ -223,14 +236,19 @@
 
         function handleInjection() {
             const val = document.getElementById('json-input').value;
+            if(!val) return alert("Por favor, pegue el contenido JSON.");
+            
             try {
                 const data = JSON.parse(val);
-                admin.injectFichas(data);
-                alert('✅ Procesamiento completado. Los documentos han sido integrados al sistema GxP.');
-                closeModal();
-                refreshUI();
+                if(typeof admin !== 'undefined') {
+                    admin.injectFichas(data);
+                    if(typeof showToast === 'function') showToast("Documentos inyectados con éxito");
+                    else alert('✅ Procesamiento completado. Los documentos han sido integrados al sistema GxP.');
+                    closeModal();
+                    refreshUI();
+                }
             } catch (e) {
-                alert('❌ Error de validación: El formato JSON no es válido.');
+                alert('❌ Error de validación: El formato JSON no es válido. ' + e.message);
             }
         }
 
