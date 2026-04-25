@@ -640,3 +640,4 @@ body {
     font-size: 0.85rem;
     color: #166534;
 }
+.hidden { display: none !important; }

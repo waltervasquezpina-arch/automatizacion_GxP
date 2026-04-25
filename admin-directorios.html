@@ -148,45 +148,36 @@
                     const hasChildren = node.children && Object.keys(node.children).length > 0;
                     
                     const div = document.createElement('div');
-                    div.className = 'tree-node';
+                    div.className = `tree-node tree-node--level-${node.level || depth} ${depth === 0 ? 'tree-node--open' : ''}`;
+                    
                     const icon = node.type === 'category' ? '📁' : (hasChildren ? '📂' : '📄');
                     
                     div.innerHTML = `
-                        <div class="tree-node__name text-sm ${hasChildren ? 'cursor-pointer hover:bg-gray-200' : ''}" 
-                             style="padding: 2px 5px; border-radius: 4px;"
-                             onclick="${hasChildren ? 'toggleTreeNode(this)' : ''}">
-                            <span class="tree-node__icon">${icon}</span>
-                            <span><b>${node.id || ''}</b> ${node.name || key}</span>
-                            ${hasChildren ? '<span class="toggle-arrow" style="font-size:0.7rem; margin-left:auto; transition: transform 0.2s;">▶</span>' : ''}
+                        <div class="tree-node__header" onclick="${hasChildren ? 'toggleTreeNode(this)' : ''}">
+                            <div class="tree-node__info">
+                                <span class="tree-node__arrow">${hasChildren ? '▶' : ''}</span>
+                                <span class="tree-node__icon">${icon}</span>
+                                <span class="node-code">${node.id || ''}</span>
+                                <span class="tree-node__name">${node.name || key}</span>
+                                <span class="level-badge">L${node.level || depth}</span>
+                            </div>
                         </div>
-                        <div class="tree-node__children ${depth >= 1 && hasChildren ? 'hidden' : ''}"></div>
+                        <div class="tree-node__children"></div>
                     `;
                     parentElement.appendChild(div);
                     
                     if (hasChildren) {
                         const childrenContainer = div.querySelector('.tree-node__children');
                         createNode(node.children, childrenContainer, depth + 1);
-                        
-                        // Rotar flecha si está visible (depth 0)
-                        if (depth === 0) {
-                            const arrow = div.querySelector('.toggle-arrow');
-                            if(arrow) arrow.style.transform = 'rotate(90deg)';
-                        }
                     }
                 }
             }
             createNode(tree, container);
         }
 
-        function toggleTreeNode(element) {
-            const children = element.nextElementSibling;
-            const arrow = element.querySelector('.toggle-arrow');
-            if (children) {
-                const isHidden = children.classList.toggle('hidden');
-                if (arrow) {
-                    arrow.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(90deg)';
-                }
-            }
+        function toggleTreeNode(header) {
+            const node = header.parentElement;
+            node.classList.toggle('tree-node--open');
         }
 
         function renderGAS() {

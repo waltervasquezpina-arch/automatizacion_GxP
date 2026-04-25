@@ -115,6 +115,8 @@ class StorageController {
         a.click();
         
         console.log("📦 Backup maestro generado para actualización de archivo semilla.");
+        if (typeof showToast === 'function') showToast("Copia de seguridad generada");
+        else alert("Copia de seguridad generada con éxito");
     }
 }
 
