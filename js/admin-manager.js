@@ -225,8 +225,8 @@ class AdminManager {
         }).filter(e => e !== null && e.codigo_nivel_1); // Filtrar filas vacías o sin nivel 1
 
         // 3. Validación de Calidad Institucional
-        normalizedData.forEach(newEntry => {
-            if (!newEntry.codigo_nivel_0 || !newEntry.denominacion_nivel_0) {
+        const validData = normalizedData.map(newEntry => {
+            if (!newEntry || !newEntry.codigo_nivel_0 || !newEntry.denominacion_nivel_0) {
                 console.warn("Registro rechazado: Falta Nivel 0 fundamental.");
                 return null;
             }
@@ -258,7 +258,7 @@ class AdminManager {
         const uniqueData = [];
         const seenCodes = new Set();
         
-        [...currentInv, ...normalizedData].forEach(entry => {
+        [...currentInv, ...validData].forEach(entry => {
             // Fingerprint: Usamos el nivel más profundo definido para diferenciar registros
             const fingerprint = entry.codigo_nivel_4 || entry.codigo_nivel_3 || entry.codigo_nivel_2 || entry.codigo_nivel_1;
             
@@ -266,7 +266,7 @@ class AdminManager {
                 seenCodes.add(fingerprint);
                 uniqueData.push(entry);
             } else if (!fingerprint) {
-                // Si por alguna razón no hay códigos de niveles 1-4, lo mantenemos (no debería pasar con filtros previos)
+                // Si por alguna razón no hay códigos de niveles 1-4, lo mantenemos
                 uniqueData.push(entry);
             }
         });
