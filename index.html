@@ -7,16 +7,46 @@
     <link rel="stylesheet" href="css/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        .ia-config-panel { margin-top: 1rem; border-top: 1px solid #f1f5f9; padding-top: 1rem; transition: all 0.3s ease; }
-        .toast {
-            position: fixed; top: 20px; right: 20px; 
-            padding: 1rem 2rem; border-radius: 8px; 
-            background: #059669; color: white; font-weight: 600;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-            transform: translateY(-100px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 9999; display: flex; align-items: center; gap: 0.5rem;
         }
         .toast.show { transform: translateY(0); }
+
+        /* Estilos de Chat Dashboard Premium */
+        .dashboard-layout { display: grid; grid-template-columns: 1fr 400px; gap: 2rem; align-items: start; }
+        .chat-panel { 
+            display: flex; flex-direction: column; height: calc(100vh - 180px); 
+            background: white; border-radius: 16px; border: 1px solid var(--color-border);
+            overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            position: sticky; top: 120px;
+        }
+        .chat-panel__header { padding: 1.25rem; background: linear-gradient(135deg, var(--color-primary) 0%, #064e3b 100%); color: white; display:flex; align-items:center; gap:0.75rem; }
+        .chat-panel__messages { 
+            flex: 1; overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; background: #f8fafc; 
+            scroll-behavior: smooth;
+        }
+        .message { 
+            padding: 0.9rem 1.1rem; border-radius: 14px; font-size: 0.88rem; max-width: 90%; 
+            line-height: 1.5; animation: fadeIn 0.3s ease-out;
+        }
+        .message strong { font-weight: 700; color: inherit; }
+        .message--user { 
+            align-self: flex-end; background: var(--color-primary); color: white; 
+            border-bottom-right-radius: 2px; box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.2);
+        }
+        .message--ai { 
+            align-self: flex-start; background: white; border: 1px solid var(--color-border); 
+            color: #334155; border-bottom-left-radius: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .chat-panel__input { padding: 1.25rem; background: white; border-top: 1px solid var(--color-border); display: flex; gap: 0.75rem; }
+        .chat-input { 
+            flex: 1; padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 10px; 
+            font-family: inherit; font-size: 0.9rem; transition: all 0.2s;
+        }
+        .chat-input:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1); }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -46,73 +76,143 @@
                     <p class="header__subtitle">Estado de la sistematización de productos y procesos.</p>
                 </div>
                 <div style="display:flex; gap:0.8rem;">
-                    <button class="btn btn--primary" onclick="syncWithMaster()">🔄 Sincronizar Maestro</button>
-                    <button class="btn btn--outline" onclick="resetSystem()">Reiniciar Sistema</button>
+                    <button class="btn btn--outline" onclick="db.exportFullDatabase()" title="Descargar todo para actualizar archivo semilla">💾 Backup Maestro</button>
+                    <button class="btn btn--primary" onclick="syncWithMaster()">🔄 Sincronizar</button>
+                    <button class="btn btn--outline" onclick="resetSystem()">Reiniciar</button>
                 </div>
             </header>
 
-            <section class="data-grid">
-                <!-- Inventario -->
-                <div class="card">
-                    <h3>Inventario Maestro</h3>
-                    <p class="color-text-muted">Procesos de Nivel 1 a más registrados.</p>
-                    <div style="margin: 1.2rem 0;"><span id="badge-inv" class="status-badge">DETECTANDO...</span></div>
-                    <p id="count-inv" style="font-size: 2.5rem; font-weight: 800;">0</p>
-                    <p style="font-size: 0.8rem; color: var(--color-text-muted);">Registros cargados</p>
-                </div>
-
-                <!-- Mapa 0 -->
-                <div class="card">
-                    <h3>Mapa Nivel 0</h3>
-                    <p class="color-text-muted">Macroprocesos raíz activos.</p>
-                    <div style="margin: 1.2rem 0;"><span id="badge-n0" class="status-badge">DETECTANDO...</span></div>
-                    <p id="count-n0" style="font-size: 2.5rem; font-weight: 800;">0</p>
-                    <p style="font-size: 0.8rem; color: var(--color-text-muted);">Macroprocesos raíz</p>
-                </div>
-
-                <!-- Cerebro IA -->
-                <div class="card">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="font-size:1.1rem;">IA Brain</h3>
-                        <select id="provider-select" class="form-control form-control--sm" style="width:110px; font-size:0.7rem;" onchange="saveConfig()">
-                            <option value="lm-studio">LM Studio</option>
-                            <option value="gemini">Google Gemini</option>
-                        </select>
-                    </div>
-                    <div style="margin: 1.2rem 0;"><span id="badge-ai" class="status-badge status-badge--pending">CARGANDO...</span></div>
-
-                    <!-- Config LM -->
-                    <div id="panel-lm" class="ia-config-panel">
-                        <label style="font-size:0.65rem; color:var(--color-text-muted);">LM Bearer Token</label>
-                        <input type="password" id="lm-token" class="form-control form-control--sm" onchange="saveConfig()">
-                    </div>
-
-                    <!-- Config Gemini -->
-                    <div id="panel-gemini" class="ia-config-panel" style="display:none;">
-                        <div class="form-group">
-                            <label style="font-size:0.65rem; color:var(--color-text-muted);">Gemini API Key</label>
-                            <input type="password" id="gemini-key" class="form-control form-control--sm" onchange="saveConfig()">
+            <div class="dashboard-layout">
+                <section class="data-grid-container">
+                    <div class="data-grid">
+                        <!-- Inventario -->
+                        <div class="card">
+                            <h3>Inventario Maestro</h3>
+                            <p class="color-text-muted">Procesos de Nivel 1 a más registrados.</p>
+                            <div style="margin: 1.2rem 0;"><span id="badge-inv" class="status-badge">DETECTANDO...</span></div>
+                            <p id="count-inv" style="font-size: 2.5rem; font-weight: 800;">0</p>
+                            <p style="font-size: 0.8rem; color: var(--color-text-muted);">Registros cargados</p>
                         </div>
-                        <div class="form-group" style="margin-top:0.5rem;">
-                            <label style="font-size:0.65rem; color:var(--color-text-muted);">Modelo</label>
-                            <input type="text" id="gemini-model" class="form-control form-control--sm" placeholder="gemini-1.5-pro" onchange="saveConfig()">
+
+                        <!-- Mapa 0 -->
+                        <div class="card">
+                            <h3>Mapa Nivel 0</h3>
+                            <p class="color-text-muted">Macroprocesos raíz activos.</p>
+                            <div style="margin: 1.2rem 0;"><span id="badge-n0" class="status-badge">DETECTANDO...</span></div>
+                            <p id="count-n0" style="font-size: 2.5rem; font-weight: 800;">0</p>
+                            <p style="font-size: 0.8rem; color: var(--color-text-muted);">Macroprocesos raíz</p>
+                        </div>
+
+                        <!-- IA Brain PRO - Simplificado -->
+                        <div class="card">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                                <h3 style="font-size:1.1rem;">IA Brain PRO</h3>
+                                <button class="btn btn--primary btn--sm" onclick="openConfig()" style="font-size:0.7rem; padding:4px 10px;">⚙️ Ajustes</button>
+                            </div>
+                            <p class="color-text-muted" style="font-size:0.8rem; margin-bottom:1rem;">Motor de inteligencia GxP activo para validación de procesos.</p>
+                            <div style="margin: 0.5rem 0;"><span id="badge-ai" class="status-badge status-badge--pending">CARGANDO...</span></div>
+                            <p id="active-provider-name" style="font-size:0.75rem; font-weight:600; color:var(--color-primary); margin-top:0.5rem;">Cargando configuración...</p>
                         </div>
                     </div>
-                </div>
-            </section>
+
+                    <div class="card" style="margin-top:2rem;">
+                         <h3>Estado de la Norma Técnica GxP</h3>
+                         <p class="color-text-muted" style="margin-bottom:1.5rem;">Cumplimiento de la NT N° 002-2025-PCM/SGP.</p>
+                         <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:1rem;">
+                             <div style="padding:1rem; background:#f0fdf4; border-radius:8px;">
+                                 <h4 style="color:#166534; font-size:0.75rem;">Fichas Completas</h4>
+                                 <p style="font-size:1.5rem; font-weight:800; color:#14532d;">--</p>
+                             </div>
+                             <div style="padding:1rem; background:#fffbeb; border-radius:8px;">
+                                 <h4 style="color:#92400e; font-size:0.75rem;">Pendientes</h4>
+                                 <p style="font-size:1.5rem; font-weight:800; color:#78350f;">--</p>
+                             </div>
+                             <div style="padding:1rem; background:#f1f5f9; border-radius:8px;">
+                                 <h4 style="color:#475569; font-size:0.75rem;">En Revisión</h4>
+                                 <p style="font-size:1.5rem; font-weight:800; color:#1e293b;">--</p>
+                             </div>
+                         </div>
+                    </div>
+                </section>
+
+                <!-- Panel de Chat IA -->
+                <aside class="chat-panel">
+                    <div class="chat-panel__header">
+                        <span>✨</span>
+                        <h3 style="font-size:0.9rem; margin:0; flex:1; color:white;">Validación de Conexión IA</h3>
+                        <button class="btn btn--sm" onclick="openConfig()" style="background: rgba(255,255,255,0.2); color:white; border:1px solid rgba(255,255,255,0.4); padding:4px 8px; font-size:0.7rem;">⚙️ Configurar</button>
+                    </div>
+                    <div class="chat-panel__messages" id="chat-messages">
+                        <div class="message message--ai">
+                            ¡Conexión establecida! Soy tu <strong>asistente GxP</strong>. <br><br>
+                            Estoy listo para apoyarte en la estructuración de procesos según la <strong>Norma 002-2025</strong>. <br><br>
+                            ¿Puedes confirmarme si logras leerme correctamente?
+                        </div>
+                    </div>
+                    <div class="chat-panel__input">
+                        <input type="text" id="chat-input" class="chat-input" placeholder="Escribe un saludo para validar...">
+                        <button class="btn btn--primary btn--sm" onclick="sendChatMessage()">Validar</button>
+                    </div>
+                </aside>
+            </div>
         </main>
+    </div>
+
+    <!-- Modal de Configuración IA -->
+    <div id="config-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px;">
+            <h3 style="margin-bottom:1.5rem;">Configuración de IA</h3>
+            
+            <div style="margin-bottom:1.2rem;">
+                <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.4rem;">Proveedor de IA</label>
+                <select id="ai-provider-select" style="width:100%; padding:0.6rem; border-radius:6px; border:1px solid var(--color-border);">
+                    <option value="gemini">Google Gemini (Cloud)</option>
+                    <option value="lm-studio">LM Studio (Local: 1234)</option>
+                </select>
+            </div>
+
+            <div id="gemini-config-group" style="margin-bottom:1.5rem;">
+                <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.4rem;">Gemini API Key</label>
+                <input type="password" id="gemini-key-input" placeholder="AIzaSy..." style="width:100%; padding:0.6rem; border-radius:6px; border:1px solid var(--color-border); margin-bottom:0.8rem;">
+                
+                <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.4rem;">Modelo Gemini</label>
+                <select id="gemini-model-input" style="width:100%; padding:0.6rem; border-radius:6px; border:1px solid var(--color-border);">
+                    <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recomendado)</option>
+                    <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                    <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro Preview</option>
+                    <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                </select>
+            </div>
+
+            <div id="lm-config-group" style="margin-bottom:1.5rem; display:none;">
+                <label style="display:block; font-size:0.8rem; font-weight:600; margin-bottom:0.4rem;">LM Studio Bearer Token</label>
+                <input type="password" id="lm-token-input" placeholder="sk-lm-..." style="width:100%; padding:0.6rem; border-radius:6px; border:1px solid var(--color-border);">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:0.8rem;">
+                <button class="btn btn--outline btn--sm" onclick="closeConfig()">Cancelar</button>
+                <button class="btn btn--primary btn--sm" onclick="saveConfig()">Guardar Cambios</button>
+            </div>
+        </div>
     </div>
 
     <script src="js/storage.js"></script>
     <script src="js/core-engine.js"></script>
     <script src="js/ai-handler.js"></script>
     <script>
-        function showToast(msg) {
+        function showToast(msg, type = 'success') {
             const toast = document.getElementById('ai-toast');
             if (toast) {
-                document.getElementById('toast-msg').textContent = msg;
+                const msgSpan = document.getElementById('toast-msg');
+                msgSpan.textContent = msg;
+                
+                // Reset classes
+                toast.className = 'toast';
+                if (type === 'error') toast.classList.add('toast--error');
+                if (type === 'warning') toast.classList.add('toast--warning');
+                
                 toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 3000);
+                setTimeout(() => toast.classList.remove('show'), 3500);
             }
         }
 
@@ -138,14 +238,8 @@
 
                 // 3. Cargar Configuración IA
                 const provider = localStorage.getItem('AI_PROVIDER') || 'lm-studio';
-                document.getElementById('provider-select').value = provider;
-                document.getElementById('lm-token').value = localStorage.getItem('LM_API_TOKEN') || '';
-                document.getElementById('gemini-key').value = localStorage.getItem('GEMINI_API_KEY') || '';
-                document.getElementById('gemini-model').value = localStorage.getItem('GEMINI_MODEL') || 'gemini-1.5-pro';
-
-                // Toggles de visibilidad
-                document.getElementById('panel-lm').style.display = provider === 'lm-studio' ? 'block' : 'none';
-                document.getElementById('panel-gemini').style.display = provider === 'gemini' ? 'block' : 'none';
+                const providerName = provider === 'gemini' ? 'Google Gemini' : 'LM Studio';
+                document.getElementById('active-provider-name').textContent = `Proveedor: ${providerName}`;
 
                 // 4. Test Conexión Asíncrono
                 checkAIConnection().then(ok => {
@@ -165,13 +259,8 @@
             }
         }
 
-        function saveConfig() {
-            localStorage.setItem('AI_PROVIDER', document.getElementById('provider-select').value);
-            localStorage.setItem('LM_API_TOKEN', document.getElementById('lm-token').value);
-            localStorage.setItem('GEMINI_API_KEY', document.getElementById('gemini-key').value);
-            localStorage.setItem('GEMINI_MODEL', document.getElementById('gemini-model').value);
-            updateUI(); // Refrescar UI inmediatamente
-        }
+        // La función saveConfig ahora reside en ai-handler.js para evitar duplicidad
+        // y asegurar que el modal se cierre correctamente.
 
         function resetSystem() {
             if(confirm('¿Reiniciar todo el sistema? Se perderán cambios manuales.')){
@@ -191,6 +280,50 @@
                 }
             }
         }
+
+        // --- Lógica de Chat IA con Formato ---
+        function formatMarkdown(text) {
+            if (!text) return "";
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>')
+                .replace(/^- (.*)$/gm, '• $1'); // Simular listas
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input');
+            const messages = document.getElementById('chat-messages');
+            const text = input.value.trim();
+            if(!text) return;
+
+            // Añadir mensaje usuario
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message message--user';
+            userMsg.textContent = text;
+            messages.appendChild(userMsg);
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+
+            // Añadir placeholder AI
+            const aiMsg = document.createElement('div');
+            aiMsg.className = 'message message--ai';
+            aiMsg.innerHTML = '<span class="loading-dots">Generando respuesta...</span>';
+            messages.appendChild(aiMsg);
+
+            try {
+                const response = await getAICompletion(text);
+                aiMsg.innerHTML = formatMarkdown(response);
+            } catch(e) {
+                aiMsg.innerHTML = `<span style="color:#dc2626">⚠️ Error: ${e.message}</span>`;
+                console.error("Chat Error:", e);
+            }
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        document.getElementById('chat-input').onkeydown = (e) => {
+            if(e.key === 'Enter') sendChatMessage();
+        };
 
         document.addEventListener('DOMContentLoaded', updateUI);
     </script>

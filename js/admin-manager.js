@@ -71,7 +71,7 @@ class AdminManager {
         document.getElementById('add-sub-fields').style.display = 'none';
         
         document.getElementById('btn-save-edit').onclick = () => this.saveEdit();
-        document.getElementById('edit-modal').classList.add('detail-panel--active');
+        document.getElementById('edit-modal-overlay').classList.add('modal-overlay--active');
     }
 
     openAddChild(parentCode) {
@@ -81,11 +81,11 @@ class AdminManager {
         document.getElementById('new-sub-code').value = parentCode + '.01'; // Sugerencia
         
         document.getElementById('btn-save-edit').onclick = () => this.saveAdd();
-        document.getElementById('edit-modal').classList.add('detail-panel--active');
+        document.getElementById('edit-modal-overlay').classList.add('modal-overlay--active');
     }
 
     closeModal() {
-        document.getElementById('edit-modal').classList.remove('detail-panel--active');
+        document.getElementById('edit-modal-overlay').classList.remove('modal-overlay--active');
     }
 
     saveEdit() {
@@ -167,54 +167,65 @@ class AdminManager {
         let currentInv = append ? (db.get(db.DB_KEYS.INVENTARIO) || []) : [];
         let currentMapa = db.get(db.DB_KEYS.MAPA_NIVEL_0) || [];
 
+        // Capa de Seguridad: Sanitización (Evitar XSS)
+        const sanitize = (val) => {
+            if (val === null || val === undefined) return "";
+            if (typeof val !== 'string') return String(val);
+            return val.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gmi, "[BLOQUEADO]")
+                      .replace(/on\w+=/gi, "blocked=")
+                      .replace(/[<>]/g, ""); // Escapar tags básicos
+        };
+
+        let lastN0 = null, lastN0Name = null;
+        let lastN1 = null, lastN1Name = null;
+        let lastN2 = null, lastN2Name = null;
+        let lastN3 = null, lastN3Name = null;
+
         const normalizedData = data.map(entry => {
             if (!autoNormalize) return entry;
-            
-            // 1. Capa de Seguridad: Sanitización (Evitar XSS)
-            const sanitize = (val) => {
-                if (typeof val !== 'string') return val;
-                return val.replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gmi, "[BLOQUEADO]")
-                          .replace(/on\w+=/gi, "blocked=")
-                          .replace(/[<>]/g, ""); // Escapar tags básicos
+            // Mapeo inteligente con soporte para herencia
+            const getVal = (keys) => {
+                for (let k of keys) if (entry[k]) return entry[k];
+                return null;
             };
 
-            // 2. Mapeo inteligente
-            const map = {
-                "Código Nivel 0": "codigo_nivel_0",
-                "Denominación Nivel 0 (Ficha Oficial)": "denominacion_nivel_0",
-                "Nombre_Nivel_0": "denominacion_nivel_0",
-                "Nombre Nivel 0": "denominacion_nivel_0",
-                
-                "Código Nivel 1": "codigo_nivel_1",
-                "Denominación Nivel 1 (Ficha Oficial)": "denominacion_nivel_1",
-                "Nombre_Nivel_1": "denominacion_nivel_1",
-                "Nombre Nivel 1": "denominacion_nivel_1",
-                "Denominación Nivel 1": "denominacion_nivel_1",
+            const c0 = getVal(["Código Nivel 0", "codigo_nivel_0"]);
+            const n0 = getVal(["Denominación Nivel 0 (Ficha Oficial)", "Nombre Nivel 0", "denominacion_nivel_0"]);
+            if (c0) { lastN0 = c0; lastN0Name = n0; }
 
-                "Código Nivel 2": "codigo_nivel_2",
-                "Denominación Nivel 2 (propuesto)": "denominacion_nivel_2",
-                "Denominación Nivel 2 (Último Nivel propuesto)": "denominacion_nivel_2",
-                "Nombre_Nivel_2": "denominacion_nivel_2",
-                "Denominación Nivel 2": "denominacion_nivel_2",
+            const c1 = getVal(["Código Nivel 1", "codigo_nivel_1"]);
+            const n1 = getVal(["Denominación Nivel 1 (Ficha Oficial)", "Nombre Nivel 1", "denominacion_nivel_1"]);
+            if (c1) { lastN1 = c1; lastN1Name = n1; }
 
-                "Código Nivel 3": "codigo_nivel_3",
-                "Denominación Nivel 3 (propuesto)": "denominacion_nivel_3",
-                "Nombre_Nivel_3": "denominacion_nivel_3",
-                "Denominación Nivel 3": "denominacion_nivel_3",
+            const c2 = getVal(["Código Nivel 2", "codigo_nivel_2", "Denominación Nivel 2 (Ficha Oficial)"]);
+            const n2 = getVal(["Denominación Nivel 2 (Ficha Oficial)", "Nombre Nivel 2", "denominacion_nivel_2", "Denominación Nivel 2 (Último Nivel propuesto)"]);
+            if (c2) { lastN2 = c2; lastN2Name = n2; }
 
-                "Código Nivel 4": "codigo_nivel_4",
-                "Denominación Nivel 4 (propuesto)": "denominacion_nivel_4"
+            const c3 = getVal(["Código Nivel 3", "codigo_nivel_3"]);
+            const n3 = getVal(["Denominación Nivel 3 (Propuesto)", "Nombre Nivel 3", "denominacion_nivel_3"]);
+            if (c3) { lastN3 = c3; lastN3Name = n3; }
+
+            // Solo procedemos si al menos hay un código de nivel identificable por herencia o directo
+            if (!lastN0) return null;
+
+            const newEntry = {
+                codigo_nivel_0: sanitize(lastN0),
+                denominacion_nivel_0: sanitize(lastN0Name),
+                codigo_nivel_1: sanitize(lastN1),
+                denominacion_nivel_1: sanitize(lastN1Name),
+                codigo_nivel_2: sanitize(lastN2),
+                denominacion_nivel_2: sanitize(lastN2Name),
+                codigo_nivel_3: sanitize(lastN3),
+                denominacion_nivel_3: sanitize(lastN3Name),
+                producto: sanitize(getVal(["Producto", "Productos Oficiales Asociados (RDE-000050)", "Productos_Asociados"])),
+                receptor: sanitize(getVal(["Receptor", "receptor"]))
             };
 
-            const newEntry = {};
-            Object.keys(entry).forEach(key => {
-                const normKey = map[key] || key.toLowerCase().replace(/ /g, '_');
-                if (entry[key] !== null && entry[key] !== undefined) {
-                    newEntry[normKey] = sanitize(entry[key]);
-                }
-            });
+            return newEntry;
+        }).filter(e => e !== null && e.codigo_nivel_1); // Filtrar filas vacías o sin nivel 1
 
-            // 3. Validación de Calidad Institucional
+        // 3. Validación de Calidad Institucional
+        normalizedData.forEach(newEntry => {
             if (!newEntry.codigo_nivel_0 || !newEntry.denominacion_nivel_0) {
                 console.warn("Registro rechazado: Falta Nivel 0 fundamental.");
                 return null;
@@ -243,12 +254,24 @@ class AdminManager {
             return newEntry;
         }).filter(e => e !== null); // Eliminar registros inválidos
 
-        // Guardar cambios si hay datos válidos
-        if (normalizedData.length === 0) {
-            throw new Error("No se encontraron registros válidos que cumplan con la estructura institucional.");
-        }
+        // Guardar cambios si hay datos válidos (incluyendo deduplicación por código)
+        const uniqueData = [];
+        const seenCodes = new Set();
+        
+        [...currentInv, ...normalizedData].forEach(entry => {
+            // Fingerprint: Usamos el nivel más profundo definido para diferenciar registros
+            const fingerprint = entry.codigo_nivel_4 || entry.codigo_nivel_3 || entry.codigo_nivel_2 || entry.codigo_nivel_1;
+            
+            if (fingerprint && !seenCodes.has(fingerprint)) {
+                seenCodes.add(fingerprint);
+                uniqueData.push(entry);
+            } else if (!fingerprint) {
+                // Si por alguna razón no hay códigos de niveles 1-4, lo mantenemos (no debería pasar con filtros previos)
+                uniqueData.push(entry);
+            }
+        });
 
-        db.save(db.DB_KEYS.INVENTARIO, [...currentInv, ...normalizedData]);
+        db.save(db.DB_KEYS.INVENTARIO, uniqueData);
         db.save(db.DB_KEYS.MAPA_NIVEL_0, currentMapa);
         
         this.refreshTree();

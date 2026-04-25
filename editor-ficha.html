@@ -226,6 +226,7 @@
                     </div>
                     <div style="display:flex; gap:12px;">
                         <button class="btn btn--outline" onclick="window.history.back()">✕ Cancelar</button>
+                        <button class="btn btn--gxp btn--export" onclick="exportToWord()">📄 Exportar Word</button>
                         <button class="btn btn--gxp btn--export" onclick="exportJson()">📦 Exportar JSON</button>
                         <button class="btn btn--gxp btn--save" onclick="saveData()">💾 Guardar Cambios</button>
                     </div>
@@ -359,6 +360,7 @@
 
     <script src="js/storage.js"></script>
     <script src="js/core-engine.js"></script>
+    <script src="js/export-engine.js"></script>
     <script>
         const params = new URLSearchParams(window.location.search);
         const currentCode = params.get('code');
@@ -505,6 +507,11 @@
             a.href = url;
             a.download = `GxP_Ficha_${currentCode}.json`;
             a.click();
+        }
+
+        function exportToWord() {
+            const data = collectData();
+            exporter.toWord(data.fichaDeProductoYProceso);
         }
     </script>
 </body>

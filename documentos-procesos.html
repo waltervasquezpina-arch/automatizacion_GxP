@@ -90,6 +90,7 @@
 
     <script src="js/storage.js"></script>
     <script src="js/core-engine.js"></script>
+    <script src="js/export-engine.js"></script>
     <script src="js/admin-manager.js"></script>
     <script>
         let currentCategory = 'all';
@@ -145,7 +146,10 @@
                                     <span style="font-size:0.95rem; font-weight:600;">${node.name}</span>
                                 </div>
                             </div>
-                            <button class="btn btn--sm btn--primary" onclick="event.preventDefault(); window.location.href='editor-ficha.html?code=${node.id}'">📄 Ficha Macro</button>
+                            <div style="display:flex; gap:0.5rem;">
+                                <button class="btn btn--sm btn--primary" onclick="event.preventDefault(); window.location.href='editor-ficha.html?code=${node.id}'">📄 Ficha Macro</button>
+                                <button class="btn btn--sm btn--outline" onclick="event.preventDefault(); exportFicha('${node.id}')">💾 Word</button>
+                            </div>
                         </summary>
                         <div class="doc-accordion__content">
                             ${renderChildren(node, search)}
@@ -186,7 +190,8 @@
                             </div>
                         </div>
                         <div style="display:flex; gap:8px;">
-                            <button class="btn btn--sm btn--outline" onclick="window.location.href='editor-ficha.html?code=${child.id}'">Editar Ficha</button>
+                            <button class="btn btn--sm btn--primary" onclick="window.location.href='editor-ficha.html?code=${child.id}'">Editar</button>
+                            <button class="btn btn--sm btn--outline" onclick="exportFicha('${child.id}')" title="Exportar a Word">📄</button>
                         </div>
                     </div>
                 `;
@@ -225,6 +230,15 @@
                 refreshUI();
             } catch (e) {
                 alert('❌ Error de validación: El formato JSON no es válido.');
+            }
+        }
+
+        function exportFicha(code) {
+            const ficha = core.getFicha(code);
+            if(ficha && (ficha.nombre || ficha.codigo)) {
+                exporter.toWord(ficha);
+            } else {
+                alert('No hay datos suficientes para exportar esta ficha. Por favor, edítela primero.');
             }
         }
     </script>

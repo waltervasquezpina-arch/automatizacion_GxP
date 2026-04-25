@@ -91,6 +91,31 @@ class StorageController {
         localStorage.removeItem(this.DB_KEYS.CONFIG);
         location.reload();
     }
+
+    /**
+     * Exporta toda la base de datos local en un único objeto JSON para respaldo manual.
+     */
+    exportFullDatabase() {
+        const fullDB = {
+            metadata: {
+                version: "2.0",
+                date: new Date().toISOString(),
+                user_pro: true
+            },
+            [this.DB_KEYS.INVENTARIO]: this.get(this.DB_KEYS.INVENTARIO) || [],
+            [this.DB_KEYS.MAPA_NIVEL_0]: this.get(this.DB_KEYS.MAPA_NIVEL_0) || [],
+            "FICHAS_TECNICAS": this.get("FICHAS_TECNICAS") || {}
+        };
+
+        const blob = new Blob([JSON.stringify(fullDB, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `backup_gxp_semilla_${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        
+        console.log("📦 Backup maestro generado para actualización de archivo semilla.");
+    }
 }
 
 // Instancia global del controlador

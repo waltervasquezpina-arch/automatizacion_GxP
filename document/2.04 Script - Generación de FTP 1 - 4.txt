@@ -1,0 +1,406 @@
+
+
+  Extractor MAESTRO de Fichas de Procesos (Doc a JSON)
+  Modalidad 1 Extrae únicamente la ficha donde el usuario tiene el cursor.
+  Modalidad 2 Escanea todo el documento y permite seleccionar varias con checkboxes.
+ 
+
+function onOpen() {
+  const ui = DocumentApp.getUi();
+  ui.createMenu('SGP Extractor')
+    .addItem('⚡ Extraer Ficha Actual (Posición del Cursor)', 'extraerFichaBajoCursor')
+    .addSeparator()
+    .addItem('📄 Escanear Documento (Selección Múltiple)', 'escanearDocumentoActual')
+    .addToUi();
+}
+
+
+  =========================================================================
+  1. EXTRACCIÓN RÁPIDA (POR CURSOR)
+  =========================================================================
+ 
+function extraerFichaBajoCursor() {
+  const doc = DocumentApp.getActiveDocument();
+  const cursor = doc.getCursor();
+  const selection = doc.getSelection();
+
+   1. Identificar dónde está parado el usuario
+  let element = null;
+  if (cursor) {
+    element = cursor.getElement();
+  } else if (selection) {
+    element = selection.getRangeElements()[0].getElement();
+  }
+
+  if (!element) {
+    DocumentApp.getUi().alert(Aviso, Por favor, haz clic dentro de la tabla de la Ficha antes de ejecutar., DocumentApp.getUi().ButtonSet.OK);
+    return;
+  }
+
+   2. Escalar hacia arriba en el DOM para encontrar la Tabla Padre
+  let parentTable = null;
+  let curr = element;
+  while (curr) {
+    if (curr.getType() === DocumentApp.ElementType.TABLE) {
+      parentTable = curr;
+      break;
+    }
+    curr = curr.getParent();
+  }
+
+  if (!parentTable) {
+    DocumentApp.getUi().alert(Aviso, El cursor no se encuentra dentro de una tabla. Haz clic dentro de la tabla principal de la Ficha., DocumentApp.getUi().ButtonSet.OK);
+    return;
+  }
+
+   3. Validar que sea la tabla inicial de la Ficha
+  let tableText = parentTable.getText().toUpperCase();
+  if (!tableText.includes(CÓDIGO) && !tableText.includes(CODIGO)) {
+    DocumentApp.getUi().alert(Aviso, La tabla donde hiciste clic no parece ser la tabla de una Ficha (No se encontró la palabra 'Código')., DocumentApp.getUi().ButtonSet.OK);
+    return;
+  }
+
+   4. Extraer TODOS los componentes (Soporta Tablas Gigantes Únicas)
+  let fichaActual = { datosBrutos {}, cadenaValor [] };
+  
+  extraerParesClaveValor(parentTable, fichaActual.datosBrutos);
+  if (tableText.includes(PROVEEDOR)  tableText.includes(RECEPTOR)) {
+    extraerCadenaValor(parentTable, fichaActual.cadenaValor);
+  }
+
+   5. Búsqueda Inteligente (Por si la ficha está dividida en varias tablas)
+  let nextElement = parentTable.getNextSibling();
+  let tablasAdicionalesAtrapadas = 0;
+  let intentos = 0;
+
+  while (nextElement && tablasAdicionalesAtrapadas  2 && intentos  10) {
+    if (nextElement.getType() === DocumentApp.ElementType.TABLE) {
+      let text = nextElement.getText().toUpperCase();
+      
+      if (text.includes(CÓDIGO)  text.includes(CODIGO)) {
+        break;  Empezó una ficha nueva, cortar.
+      } 
+      
+       Intentar extraer datos complementarios de la siguiente tabla
+      extraerParesClaveValor(nextElement, fichaActual.datosBrutos);
+      if (text.includes(PROVEEDOR)) {
+        extraerCadenaValor(nextElement, fichaActual.cadenaValor);
+      }
+      
+      tablasAdicionalesAtrapadas++;
+    }
+    nextElement = nextElement.getNextSibling();
+    intentos++;
+  }
+
+   6. Formatear y mostrar directamente el JSON
+  const jsonFinal = [formatearEstructuraInterna(fichaActual, 1).datosOficiales];
+  mostrarJSONDirecto(jsonFinal);
+}
+
+
+  =========================================================================
+  2. ESCANEO MASIVO (SELECCIÓN MULTIPLE)
+  =========================================================================
+ 
+function escanearDocumentoActual() {
+  const doc = DocumentApp.getActiveDocument();
+  const body = doc.getBody();
+  const tables = body.getTables();
+
+  let fichasEncontradas = [];
+  let fichaActual = null;
+
+  for (let i = 0; i  tables.length; i++) {
+    const table = tables[i];
+    const tableText = table.getText().toUpperCase();
+
+     Iniciar nueva ficha si detecta código
+    if (tableText.includes(CÓDIGO)  tableText.includes(CODIGO)) {
+      if (fichaActual && fichaActual.datosBrutos.Codigo) {
+        fichasEncontradas.push(formatearEstructuraInterna(fichaActual, fichasEncontradas.length));
+      }
+      fichaActual = { datosBrutos {}, cadenaValor [] };
+    }
+
+     Extracción en bloque (Sin ifelse excluyentes)
+    if (fichaActual) {
+      extraerParesClaveValor(table, fichaActual.datosBrutos);
+      
+      if (tableText.includes(PROVEEDOR)  tableText.includes(RECEPTOR)) {
+        extraerCadenaValor(table, fichaActual.cadenaValor);
+      }
+    }
+  }
+
+  if (fichaActual && fichaActual.datosBrutos.Codigo) {
+    fichasEncontradas.push(formatearEstructuraInterna(fichaActual, fichasEncontradas.length));
+  }
+
+  if (fichasEncontradas.length === 0) {
+    DocumentApp.getUi().alert(Aviso, No se detectaron tablas con el formato oficial., DocumentApp.getUi().ButtonSet.OK);
+    return;
+  }
+
+  mostrarModalSeleccion(fichasEncontradas);
+}
+
+
+  =========================================================================
+  3. FUNCIONES DE PARSEO Y MAPEO DE DATOS
+  =========================================================================
+ 
+function extraerParesClaveValor(table, targetObj) {
+  for (let r = 0; r  table.getNumRows(); r++) {
+    let row = table.getRow(r);
+    for (let c = 0; c  row.getNumCells(); c++) {
+      let cellText = row.getCell(c).getText().trim();
+      let headerLimpio = cellText.replace($, '').trim();
+      
+      if (headerLimpio.length  0 && headerLimpio.length  50) {
+        let keyNormalizada = normalizarLlave(headerLimpio);
+        if (keyNormalizada && c + 1  row.getNumCells()) {
+          targetObj[keyNormalizada] = row.getCell(c + 1).getText().trim();
+          c++; 
+        }
+      }
+    }
+  }
+}
+
+function extraerCadenaValor(table, targetArr) {
+  let filaInicio = -1; 
+  
+   Buscar dónde empieza la cabecera de la Cadena de Valor
+  for (let r = 0; r  table.getNumRows(); r++) {
+    if (table.getRow(r).getText().toUpperCase().includes(PROVEEDOR)) {
+      filaInicio = r + 1;
+      break;
+    }
+  }
+
+  if (filaInicio === -1) return;
+
+  for (let r = filaInicio; r  table.getNumRows(); r++) {
+    let row = table.getRow(r);
+    let rowText = row.getText().toUpperCase();
+
+     Detener la extracción de filas si llegamos a los Riesgos o Registros
+    if (rowText.includes(RIESGOS)  rowText.includes(REGISTROS)  rowText.includes(ACTIVIDADES DEL PROCESO)) {
+      break;
+    }
+
+    if (row.getNumCells() = 4) {
+      let proveedor = row.getCell(0).getText();
+      let entradas = row.getCell(1).getText();
+      let proceso = row.getCell(2).getText();
+      let producto = row.getCell(3).getText();
+      let receptor = row.getNumCells() = 5  row.getCell(4).getText()  ;
+
+       Agregar fila solo si al menos una celda principal tiene contenido
+      if (proveedor.trim() !==   proceso.trim() !==   producto.trim() !== ) {
+        targetArr.push({
+          Proveedor_de_elemento_de_entrada convertirATextoArray(proveedor),
+          Elementos_de_entrada convertirATextoArray(entradas),
+          Proceso_desplegado_Nivel_2 proceso.trim(),
+          Producto producto.trim(),
+          Receptor_del_producto convertirATextoArray(receptor)
+        });
+      }
+    }
+  }
+}
+
+function convertirATextoArray(texto) {
+  if (!texto) return [];
+  return texto.split(n•-g).map(s = s.trim()).filter(s = s.length  0);
+}
+
+function normalizarLlave(texto) {
+  const t = texto.toUpperCase().normalize(NFD).replace([u0300-u036f]g, ).replace( g, '_');
+  
+  if (t.includes(CODIGO)) return Codigo;
+  if (t.includes(VERSION)) return Version;
+  if (t.includes(TIPO_DE_PROCESO)) return Tipo_de_Proceso;
+  if (t.includes(NOMBRE)) return Nombre;
+  if (t.includes(DUENO)  t.includes(DUEÑO)) return Dueno_del_proceso;
+  
+  if (t.includes(ESTRATEGICO)) return Objetivo_estrategico;
+  if (t.includes(OBJETIVO)) return Objetivo_del_proceso; 
+  
+  if (t.includes(NORMATIVO)  t.includes(REQUISITO)) return Requisitos_normativos;
+  if (t.includes(RIESGOS)) return Riesgos;
+  if (t.includes(REGISTROS)) return Registros;
+  if (t.includes(ACTIVIDADES)) return Actividades_del_proceso;
+  
+  return null; 
+}
+
+function formatearEstructuraInterna(fichaBuilder, idIndex) {
+  const b = fichaBuilder.datosBrutos;
+  return {
+    id idIndex,
+    titulo `${b.Codigo  'Sin_Cod'} - ${b.Nombre  'Sin_Nombre'}`,
+    datosOficiales {
+      FICHA_DE_PRODUCTO_Y_PROCESO {
+        INFORMACION_GENERAL {
+          Codigo b.Codigo  ,
+          Version b.Version  ,
+          Tipo_de_Proceso b.Tipo_de_Proceso  ,
+          Nombre b.Nombre  ,
+          Dueno_del_proceso b.Dueno_del_proceso  ,
+          Objetivo_del_proceso b.Objetivo_del_proceso  ,
+          Objetivo_estrategico b.Objetivo_estrategico  ,
+          Requisitos_normativos b.Requisitos_normativos  
+        },
+        DESCRIPCION_DEL_PROCESO {
+          Cadena_de_Valor fichaBuilder.cadenaValor
+        },
+        OPERATIVIDAD_Y_CONTROL {
+          Riesgos b.Riesgos  ,
+          Registros b.Registros  ,
+          Actividades_del_proceso b.Actividades_del_proceso  
+        }
+      }
+    }
+  };
+}
+
+
+  =========================================================================
+  4. INTERFACES VISUALES (HTML)
+  =========================================================================
+ 
+
+ UI para mostrar directamente el JSON extraído por el Cursor
+function mostrarJSONDirecto(jsonData) {
+  const jsonString = JSON.stringify(jsonData, null, 2);
+  const nombreFicha = jsonData[0].INFORMACION_GENERAL  jsonData[0].INFORMACION_GENERAL.Codigo  Seleccionada;
+  
+  const html = `
+    div style=font-family Arial, sans-serif; padding 15px; display flex; flex-direction column; height 100%; box-sizing border-box; background-color #ffffff;
+      h2 style=color #1a73e8; margin 0 0 10px 0; font-size 20px;⚡ Extracción Rápida Listah2
+      p style=font-size 14px; color #555; margin-bottom 15px;Ficha b${nombreFicha}b extraída exitosamente. Cópiala a tu Generador.p
+      
+      div style=flex-grow 1; min-height 400px; display flex; flex-direction column;
+        textarea id=jsonOutput readonly style=flex-grow 1; width 100%; padding 15px; font-family 'Courier New', monospace; font-size 13px; border 1px solid #ccc; border-radius 6px; background-color #f8f9fa; resize none;${jsonString}textarea
+      div
+      
+      div style=margin-top 15px; text-align right; padding-top 10px; border-top 1px solid #eee;
+        button onclick=google.script.host.close() style=padding 10px 20px; border 1px solid #ccc; background white; border-radius 6px; cursor pointer; margin-right 10px; font-size 14px;Cerrarbutton
+        button id=btnCopiar onclick=copiarTexto() style=padding 10px 20px; background-color #1a73e8; color white; border none; border-radius 6px; font-weight bold; cursor pointer; font-size 14px; box-shadow 0 2px 4px rgba(0,0,0,0.1);Copiar JSONbutton
+      div
+
+      script
+        function copiarTexto() {
+          const area = document.getElementById('jsonOutput');
+          area.select();
+          document.execCommand('copy');
+          const btn = document.getElementById('btnCopiar');
+          btn.innerText = '¡Copiado Exitosamente!';
+          btn.style.backgroundColor = '#0f9d58';
+          setTimeout(() = { btn.innerText = 'Copiar JSON'; btn.style.backgroundColor = '#1a73e8'; }, 2500);
+        }
+      script
+    div
+  `;
+   Interfaz Ampliada
+  const htmlOutput = HtmlService.createHtmlOutput(html).setWidth(800).setHeight(600);
+  DocumentApp.getUi().showModalDialog(htmlOutput, 'Extracción por Cursor');
+}
+
+ UI para el Escaneo Masivo y Selección con Checkboxes
+function mostrarModalSeleccion(fichas) {
+  const fichasDataStr = JSON.stringify(fichas);
+  const html = `
+    div style=font-family Arial, sans-serif; padding 15px; display flex; flex-direction column; height 100%; box-sizing border-box; background-color #ffffff;
+      
+      !-- VISTA 1 --
+      div id=vistaSeleccion style=display flex; flex-direction column; height 100%;
+        h2 style=color #0f9d58; margin 0 0 10px 0; font-size 20px;📄 Fichas Detectadash2
+        p style=font-size 14px; color #555; margin-bottom 15px;Selecciona qué fichas deseas convertir a JSONp
+        
+        div style=flex-grow 1; overflow-y auto; border 1px solid #ddd; border-radius 6px; padding 15px; background #fdfdfd; margin-bottom 15px;
+          label style=display block; margin-bottom 15px; font-weight bold; cursor pointer; border-bottom 1px solid #eee; padding-bottom 10px; font-size 15px;
+            input type=checkbox id=checkAll onchange=toggleAll(this) style=transform scale(1.2); margin-right 8px; Seleccionar Todas
+          label
+          div id=listaFichasdiv
+        div
+        
+        div style=text-align right; padding-top 10px; border-top 1px solid #eee;
+          button onclick=google.script.host.close() style=padding 10px 20px; border 1px solid #ccc; background white; border-radius 6px; cursor pointer; margin-right 10px; font-size 14px;Cancelarbutton
+          button onclick=generarJSONSeleccionado() style=padding 10px 20px; background-color #0f9d58; color white; border none; border-radius 6px; font-weight bold; cursor pointer; font-size 14px; box-shadow 0 2px 4px rgba(0,0,0,0.1);Extraer Seleccionadasbutton
+        div
+      div
+
+      !-- VISTA 2 --
+      div id=vistaResultado style=display none; flex-direction column; height 100%;
+        h2 style=color #1a73e8; margin 0 0 10px 0; font-size 20px;Extracción Listah2
+        p style=font-size 14px; color #555; margin-bottom 15px;Copia este texto y pégalo en tu Generador Masivo.p
+        
+        div style=flex-grow 1; min-height 400px; display flex; flex-direction column;
+          textarea id=jsonOutput readonly style=flex-grow 1; width 100%; padding 15px; font-family 'Courier New', monospace; font-size 13px; border 1px solid #ccc; border-radius 6px; background-color #f8f9fa; resize none;textarea
+        div
+        
+        div style=margin-top 15px; text-align right; padding-top 10px; border-top 1px solid #eee;
+          button onclick=volverASeleccion() style=padding 10px 20px; border 1px solid #ccc; background white; border-radius 6px; cursor pointer; margin-right 10px; float left; font-size 14px;Atrásbutton
+          button onclick=google.script.host.close() style=padding 10px 20px; border 1px solid #ccc; background white; border-radius 6px; cursor pointer; margin-right 10px; font-size 14px;Cerrarbutton
+          button id=btnCopiar onclick=copiarTexto() style=padding 10px 20px; background-color #1a73e8; color white; border none; border-radius 6px; font-weight bold; cursor pointer; font-size 14px; box-shadow 0 2px 4px rgba(0,0,0,0.1);Copiar JSONbutton
+        div
+      div
+
+      script
+        const datosFichas = ${fichasDataStr};
+        const contenedorLista = document.getElementById('listaFichas');
+        let htmlLista = '';
+        datosFichas.forEach(ficha = {
+          htmlLista += 'label style=display block; margin-bottom 10px; cursor pointer; font-size 14px; padding 5px; border-radius 4px; transition background 0.2s;' +
+                       'input type=checkbox class=ficha-chk value=' + ficha.id + ' style=transform scale(1.2); margin-right 8px; ' + ficha.titulo + 'label';
+        });
+        contenedorLista.innerHTML = htmlLista;
+
+         Estilos para hover en la lista
+        document.querySelectorAll('label').forEach(lbl = {
+            lbl.addEventListener('mouseover', () = lbl.style.backgroundColor = '#f1f3f4');
+            lbl.addEventListener('mouseout', () = lbl.style.backgroundColor = 'transparent');
+        });
+
+        function toggleAll(source) {
+          const checkboxes = document.querySelectorAll('.ficha-chk');
+          checkboxes.forEach(chk = chk.checked = source.checked);
+        }
+        
+        function generarJSONSeleccionado() {
+          const checkboxes = document.querySelectorAll('.ficha-chkchecked');
+          if (checkboxes.length === 0) { alert('Selecciona al menos una ficha.'); return; }
+          const seleccionados = [];
+          checkboxes.forEach(chk = {
+            const id = parseInt(chk.value);
+            const ficha = datosFichas.find(f = f.id === id);
+            if (ficha) seleccionados.push(ficha.datosOficiales);
+          });
+          document.getElementById('jsonOutput').value = JSON.stringify(seleccionados, null, 2);
+          document.getElementById('vistaSeleccion').style.display = 'none';
+          document.getElementById('vistaResultado').style.display = 'flex';
+        }
+        function volverASeleccion() {
+          document.getElementById('vistaResultado').style.display = 'none';
+          document.getElementById('vistaSeleccion').style.display = 'flex';
+          document.getElementById('btnCopiar').innerText = 'Copiar JSON';
+        }
+        function copiarTexto() {
+          const area = document.getElementById('jsonOutput');
+          area.select();
+          document.execCommand('copy');
+          const btn = document.getElementById('btnCopiar');
+          btn.innerText = '¡Copiado Exitosamente!';
+          btn.style.backgroundColor = '#0f9d58';
+          setTimeout(() = { btn.innerText = 'Copiar JSON'; btn.style.backgroundColor = '#1a73e8'; }, 2500);
+        }
+      script
+    div
+  `;
+   Interfaz Ampliada
+  const htmlOutput = HtmlService.createHtmlOutput(html).setWidth(800).setHeight(600);
+  DocumentApp.getUi().showModalDialog(htmlOutput, 'Selector de Fichas');
+}
