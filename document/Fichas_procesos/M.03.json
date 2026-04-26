@@ -1,0 +1,78 @@
+{
+  "Codigo": "M.03",
+  "Version": "01",
+  "Tipo_de_Proceso": "Misional",
+  "Nombre": "Gestión para la reconversión e intervenciones especiales",
+  "Dueno_del_proceso": "Unidad de Reconversión e Intervenciones Especiales",
+  "Objetivo_del_proceso": [
+    "Diseñar y ejecutar intervenciones especializadas y estratégicas que aborden desafíos complejos en el sector agrario, enfocados en la gestión de la reconversión productiva en zonas vulnerables, así como en el desarrollo de intervenciones puntuales que respondan a situaciones no contempladas en los incentivos tradicionales del Programa."
+  ],
+  "Objetivo_estratégico": [
+    "OEI 01 Mejorar la disponibilidad y gestión sostenible de los recursos hídricos y suelos para la actividad agraria",
+    "OEI 03 Incrementar la productividad y sostenibilidad agraria",
+    "OEI 04 Mejorar el acceso a mercados y la competitividad de la agricultura familiar"
+  ],
+  "Requisito_normativo": [
+    ●	Ley Nº 29337, Ley que establece disposiciones para apoyar la competitividad productiva
+●	Ley N° 29736, Ley de Reconversión Productiva Agropecuaria y modificatorias
+●	Ley N° 31331, Ley que modifica los artículos 2, 4, 5, 6, 7 y 8 de la Ley 29736, Ley de Reconversión Productiva Agropecuaria
+●	Ley N° 32434, Ley que promueve la transformación productiva, competitiva y sostenible del Sector Agrario con protección social hacia la agricultura moderna
+●	Decreto Legislativo Nº 1077, Decreto Legislativo que crea el Programa de Compensaciones para la Competitividad y sus modificatorias
+●	Decreto Supremo N° 019-2014-MINAGRI, Decreto Supremo que aprueba el Reglamento de la Ley Nº 29736, Ley de Reconversión Productiva Agropecuaria
+●	Decreto Supremo Nº 011-2024-MIDAGRI, Decreto Supremo que aprueba el Reglamento del Decreto Legislativo Nº 1077, Decreto Legislativo que crea el Programa de Compensaciones para la Competitividad
+
+  ],
+  "Descripcion_del_proceso": [
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "MIDAGRI",
+        "Organizaciones Agrarias - OAS",
+        "Empresa Asociativa"
+      ],
+      "Elementos_de_entrada": [
+        "Solicitud de pedido de reconversión productiva",
+        "Resolución Vice Ministerial aprobando el proyecto de reconversión productiva",
+        "Documento confirmando transferencia"
+      ],
+      "Proceso_desplegado_Nivel_2": "M.03.01 Evaluación y otorgamientos de recursos para programas y proyectos de reconversión productiva agropecuaria e intervenciones especiales",
+      "Producto": [
+        "Cofinanciamiento de programas y proyectos de reconversión productiva agropecuaria e intervenciones especiales"
+      ],
+      "Receptor_del_producto": [
+        "MIDAGRI",
+        "Organizaciones Agrarias - OAS",
+        "Empresa Asociativa"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "MIDAGRI",
+        "Organizaciones Agrarias - OAS",
+        "Empresa Asociativa"
+      ],
+      "Elementos_de_entrada": [
+        "Convenios firmados con OAS",
+        "Solicitud de OAS para la ejecución de los incentivos",
+        "Documento confirmando transferencia"
+      ],
+      "Proceso_desplegado_Nivel_2": "M.03.02 Seguimiento y cierre operativo de programas y proyectos de reconversión productiva agropecuaria e intervenciones especiales",
+      "Producto": [
+        "Cofinanciamiento de programas y proyectos de reconversión productiva agropecuaria e intervenciones especiales"
+      ],
+      "Receptor_del_producto": [
+        "MIDAGRI",
+        "Organizaciones Agrarias - OAS",
+        "Empresa Asociativa"
+      ]
+    }
+  ],
+  "Riesgos": [
+    "Considerar este campo en la ficha de producto y proceso de último nivel."
+  ],
+  "Registros": [
+    "Considerar este campo en la ficha de producto y proceso de último nivel."
+  ],
+  "Actividades_del_proceso": [
+    "Anexo al documento: Diagrama de Proceso (bloques) / Diagrama de Actividades (flujogramas)"
+  ]
+}
