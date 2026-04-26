@@ -1,0 +1,123 @@
+{
+  "Codigo": "E.02",
+  "Version": "01",
+  "Tipo_de_Proceso": "Estratégico",
+  "Nombre": "Gestión del fortalecimiento institucional",
+  "Dueno_del_proceso": "Unidad de Planeamiento y Presupuesto",
+  "Objetivo_del_proceso": [
+    "Desarrollar y gestionar acciones para el desarrollo organizacional, a través de la elaboración de instrumentos que permiten optimizar la operación de AGROIDEAS, con el objeto de mejorar su eficiencia y eficacia, comprende las actividades propias de modernización de la gestión pública en el marco de la Política Nacional de Modernización de la Gestión Pública."
+  ],
+  "Objetivo_estratégico": [
+    "OEI.05 Modernizar la gestión institucional en el MIDAGRI",
+    "AEI.05.01 Instrumentos de gestión implementados en el ámbito del MIDAGRI:",
+    "1.1. AEI.05.01 Instrumentos de gestión implementados en el ámbito del MIDAGRI:",
+    "- AOI00129701221 - Conducción del proceso de modernización del programa",
+    "1.2. AEI.05.06 Gestión del modelo de integridad fortalecida en el MIDAGRI:",
+    "- AOI00129701058 - Implementación del modelo de integridad",
+    "- AOI00129700657 - Implementación del plan de acción del sistema de control interno"
+  ],
+  "Requisito_normativo": [
+    "Ley N° 27658, Ley Marco de la Modernización de la Gestión del Estado.",
+    "Ley N° 28716, Ley de Control Interno de las entidades del Estado",
+    "Ley N° 29158, Ley Orgánica del Poder Ejecutivo.",
+    "Ley N° 31075, Ley de Organización y Funciones del Ministerio de Desarrollo Agrario y Riego.",
+    "Decreto Legislativo N° 1327, que establece medidas de protección para el denunciante de actos de corrupción y sanciona las denuncias realizadas de mala fe.",
+    "Decreto Supremo N° 007-2011-PCM, que aprueba la metodología de simplificación administrativa y establece disposiciones para su implementación, para la mejora de los procedimientos administrativos y servicios prestados en exclusividad.",
+    "Decreto Supremo N° 123-2018-PCM, que aprueba el Reglamento del Sistema Administrativo de Modernización de la Gestión Pública.",
+    "Decreto Supremo N° 054-2018-PCM, que aprueba los Lineamientos de Organización del Estado.",
+    "Decreto Supremo N° 061-2019-PCM, que aprueba el Reglamento para la aplicación del Análisis de Calidad Regulatoria de procedimientos administrativos",
+    "Decreto Supremo N° 002-2020 que modifica el Reglamento del Decreto Legislativo N° 1327 que establece medidas de protección al denunciante de actos de corrupción y sanciona las denuncias realizadas de mala fe.",
+    "Decreto Supremo N° 010-2017-JUS que aprueba el Reglamento del Decreto Legislativo N° 1327.",
+    "Decreto Supremo N° 042-2018-PCM que establece medidas para fortalecer la integridad pública y lucha contra la corrupción.",
+    "Decreto Supremo N° 044-2018-PCM que aprueba el Plan Nacional de Integridad y Lucha contra la corrupción 2018-2021.",
+    "Decreto Supremo N° 092-2017-PCM que aprueba la Política Nacional de Integridad y Lucha contra la Corrupción.",
+    "Resolución Ministerial N° 0188-2025-MIDAGRI, que aprueba el Manual de Operaciones (MOP) del Programa de Compensaciones para la Competitividad (AGROIDEAS)",
+    "Resolución de Secretaría de Gestión Pública N° 005-2018-PCM-SGP, que aprueba los Lineamientos para la elaboración y aprobación del Texto Único de Procedimientos Administrativos (TUPA).",
+    "Resolución de Secretaría de Gestión Pública N° 003-2018-PCM-SGP, que aprueba la Directiva que regula el sustento técnico y legal de proyectos normativos en materia de organización, estructura y funcionamiento del Estado.",
+    "Resolución de SGP N° 002-2025-PCM/SGP, que aprueba la Norma Técnica N° 002-2025-PCM/SGP, Norma Técnica para la implementación de la gestión por procesos en las entidades de la administración pública.",
+    "Resolución de Secretaría de Gestión Pública N° 005-2020-PCM/SGP, que aprueba los Lineamientos N° 02-2020-SGP que establecen orientaciones sobre el Reglamento de Organización y Funciones - ROF y el Manual de Operaciones – MOP y sus modificatorias",
+    "Resolución de Secretaría de Gestión Pública N° 004-2021-PCM/SGP, que aprueba la Norma Técnica N° 002-2021-PCM-SGP, Norma Técnica para la Gestión de la Calidad de Servicios en el Sector Público.",
+    "Resolución de Contraloría N° 320-2006-CG, que aprueba las normas de Control Interno"
+    ],
+  "Descripcion_del_proceso": [
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Secretaria de Gestión Pública (SGP) - Presidencia del Consejo de Ministros (PCM)",
+        "Unidades funcionales de AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Normativa en la materia de organización del estado",
+        "Políticas nacionales (sectorial o multisectorial) conducidas por el Sector.",
+        "Plan Operativo Institucional"
+      ],
+      "Proceso_desplegado_Nivel_2": "E.02.01 Gestión de documentos normativos y de gestión institucional",
+      "Producto": [
+        "Manual de Operaciones de AGROIDEAS",
+        "Documentos Normativos"
+      ],
+      "Receptor_del_producto": [
+        "Dirección Ejecutiva de AGROIDEAS",
+        "Unidades funcionales de AGROIDEAS"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Secretaria de Gestión Pública (SGP) - Presidencia del Consejo de Ministros (PCM)",
+        "Unidades funcionales de AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Normativa en la materia de gestión por procesos",
+        "Plan Operativo Institucional",
+        "Necesidades de mejora y optimización de procesos."
+      ],
+      "Proceso_desplegado_Nivel_2": "E.02.02 Gestión por procesos en AGROIDEAS",
+      "Producto": [
+        "Mapa de Procesos Institucional",
+        "Documentos de Procesos"
+      ],
+      "Receptor_del_producto": [
+        "Dirección Ejecutiva de AGROIDEAS",
+        "Unidades funcionales de AGROIDEAS"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Secretaria de Gestión Pública (SGP) - Presidencia del Consejo de Ministros (PCM)",
+        "Unidades funcionales de AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Plan Operativo Institucional"
+      ],
+      "Proceso_desplegado_Nivel_2": "E.02.03 Gestión del conocimiento institucional",
+      "Producto": [
+        "Repositorio Institucional de Conocimiento implementado"
+      ],
+      "Receptor_del_producto": [
+        "Dirección Ejecutiva de AGROIDEAS",
+        "Unidades funcionales de AGROIDEAS"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Secretaria de Gestión Pública (SGP) - Presidencia del Consejo de Ministros (PCM)",
+        "Unidades funcionales de AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Plan Operativo Institucional",
+        "Normas Técnicas"
+      ],
+      "Proceso_desplegado_Nivel_2": "E.02.04 Gestión de la integridad institucional y del control interno",
+      "Producto": [
+        "Sistema de control interno",
+        "Modelo de integridad institucional"
+      ],
+      "Receptor_del_producto": [
+        "Dirección Ejecutiva de AGROIDEAS",
+        "Unidades funcionales de AGROIDEAS"
+      ]
+    }
+  ],
+  "Riesgos": "Considerar este campo en la ficha de producto y proceso de último nivel.",
+  "Registros": "Considerar este campo en la ficha de producto y proceso de último nivel.",
+  "Actividades_del_proceso": "Anexo al documento: Diagrama de Proceso (bloques) / Diagrama de Actividades (flujogramas)"
+}

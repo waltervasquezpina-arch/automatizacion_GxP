@@ -1,0 +1,57 @@
+{
+    "Codigo": "E.03",
+    "Version": "01",
+    "Tipo_de_Proceso": "Estratégico",
+    "Nombre": "Gestión del seguimiento y evaluación",
+    "Dueno_del_proceso": "Unidad de Seguimiento y Evaluación",
+    "Objetivo_del_proceso": [
+        "Asesorar, conducir y coordinar los procesos vinculados al seguimiento, evaluación y gestión de la evidencia de los servicios que brinda AGROIDEAS de los planes de negocios, programas o proyectos de reconversión productiva agropecuaria, planes de trabajo u otros instrumentos equivalentes, y demás incentivos, hasta su respectivo cierre."
+    ],
+    "Objetivo_estratégico": [
+        "OEI.05 Modernizar la gestión institucional en el MIDAGRI",
+        "AEI.05.01 Instrumentos de gestión implementados en el ámbito del MIDAGRI:",
+        "1. AOI00129701363 - Conducción del proceso de seguimiento, evaluación y gestión de la evidencia de los servicios del Programa"
+    ],
+    "Requisito_normativo": [
+        "Decreto Legislativo N.º 1077, que crea el Programa de Compensaciones para la Competitividad, modificado por Ley N.º 30975 y Ley N.º 31071.",
+        "Ley 31922, Ley que modifica el decreto legislativo N.º 1077, decreto legislativo que crea el Programa de Compensaciones para la Competitividad, a fin de contar con una gestión eficiente a favor de los productores agrarios",
+        "Decreto Supremo N.º 011-2024-MIDAGRI, que aprueba el Reglamento del Decreto Legislativo N.º 1077, Decreto Legislativo que crea el Programa de Compensaciones para la Competitividad (AGROIDEAS)",
+        "Resolución Ministerial N.º 188-2025-MIDAGRI, que aprueba el Manual de Operaciones del Programa de Compensaciones para la Competitividad, y su modificatoria.",
+        "Ley N.º 29736, Ley de Reconversión Productiva Agropecuaria.",
+        "Decreto Supremo N.º 019-2014-MIDAGRI, que aprueba el Reglamento de la Ley N.º 29736, Ley de Reconversión Productiva Agropecuaria",
+        "Resolución Ministerial N.°143-2025 – MIDAGRI, que aprueba la Directiva para el Seguimiento y Supervisión de Políticas Nacionales, Planes sectoriales, Programas y Proyectos Especiales del Ministerio de Desarrollo Agrario y Riego."
+    ],
+    "Descripcion_del_proceso": [
+        {
+            "Proveedor_de_elemento_de_entrada": [
+                "MIDAGRI",
+                "Unidades funcionales de AGROIDEAS"
+            ],
+            "Elementos_de_entrada": [
+                "Normativas del sector MIDAGRI vinculadas con el seguimiento y evaluación",
+                "Sistema de información, fuentes administrativas y bases de datos de AGROIDEAS",
+                "Instrumentos de recojo de información vinculadas al seguimiento y evaluación",
+                "Informes, reportes y documentos de seguimiento y evaluación",
+                "Requerimientos de información de las unidades funcionales de AGROIDEAS"
+            ],
+            "Proceso_desplegado_Nivel_2": "E.03.01 Seguimiento y evaluación de los productos y resultados",
+            "Producto": [
+                "Seguimiento y evaluación de los servicios de AGROIDEAS"
+            ],
+            "Receptor_del_producto": [
+                "MIDAGRI",
+                "Dirección Ejecutiva",
+                "Unidades funcionales de AGROIDEAS"
+            ]
+        }
+    ],
+    "Riesgos": [
+        "Considerar este campo en la ficha de producto y proceso de último nivel."
+    ],
+    "Registros": [
+        "Considerar este campo en la ficha de producto y proceso de último nivel."
+    ],
+    "Actividades_del_proceso": [
+        "Anexo al documento: Diagrama de Proceso (bloques) / Diagrama de Actividades (flujogramas)"
+    ]
+}

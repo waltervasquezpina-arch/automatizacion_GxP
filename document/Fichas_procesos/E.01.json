@@ -1,0 +1,75 @@
+{
+  "Codigo": "E.01",
+  "Version": "01",
+  "Tipo_de_Proceso": "Estratégico",
+  "Nombre": "Gestión estratégica",
+  "Dueno_del_proceso": "Unidad de Planeamiento y Presupuesto",
+  "Objetivo_del_proceso": [
+    "Formular, aprobar y evaluar el planeamiento de corto y mediano plazo de AGROIDEAS, la programación, formulación, ejecución y evaluación de su presupuesto para el cumplimiento de la finalidad institucional, esto se realiza a través de las unidades funcionales de manera articulada con la normativa, lineamientos generales y demás disposiciones que establezca el MIDAGRI."
+  ],
+  "Objetivo_estratégico": [
+    "OEI.05 Modernizar la gestión institucional en el MIDAGRI",
+    "AEI.05.01 Instrumentos de gestión implementados en el ámbito del MIDAGRI:",
+    "AOI00129700143 - Conducción del planeamiento institucional",
+    "AOI00129701362 - Conducción del proceso presupuestario institucional"
+  ],
+  "Requisito_normativo": [
+    "Ley N° 31075, que aprueba la Ley de Organización y Funciones del Ministerio de Desarrollo Agrario y Riego",
+    "Ley de Presupuesto del Sector Público para el año fiscal vigente",
+    "Decreto Legislativo N° 719, Dictan Ley de Cooperación Técnica Internacional, y modificatorias",
+    "Decreto Legislativo N° 1088, Ley del Sistema Nacional de Planeamiento Estratégico y del Centro Nacional de Planeamiento Estratégico",
+    "Resolución Ministerial N° 0080-2021-MIDAGRI, que aprueba el Texto Integrado del Reglamento de Organización y Funciones del Ministerio de Desarrollo Agrario y Riego",
+    "Resolución Ministerial Nº 034-2023-MIDAGRI, Aprueba Directiva General DI Nº 005-2023-MIDAGRI/OGPP-OPLA, Directiva para la elaboración, aprobación, seguimiento, evaluación y modificación del Plan Operativo Institucional – POI de los Pliegos del Sector Agrario y de Riego",
+    "Resolución de Presidencia de Consejo Directivo N° 033-2017/CEPLAN/PCD, aprueba la Guía para el Planeamiento Institucional y modificatorias",
+    "Resolución de Presidencia del Consejo Directivo N° 056-2024/CEPLAN/PCD, aprueba la “Guía para el seguimiento y evaluación de políticas nacionales y planes del SINAPLAN”",
+    "Resolución Directoral N° 012-2018-EF/50.01, que aprueba la Directiva N° 001-2018-EF/50.01 “Directiva de Programación Multianual” y modificatoria, y modificatorias",
+    "Resolución Directoral N° 0030-2020-EF/50.01, que aprueba la Directiva N° 0005-2020-EF/50.01, Directiva para el Diseño de los Programas Presupuéstales en el marco del Presupuesto por Resultados"
+  ],
+
+  "Descripcion_del_proceso": [
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "MIDAGRI",
+        "AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Políticas y planes propuestos por el MIDAGRI",
+        "Plan Operativo Anual Articulado Multianual (POAAR)"
+      ],
+      "Proceso_desplegado_Nivel_2": "E.01.01 Gestión del planeamiento institucional",
+      "Producto": [
+        "Programación operativa institucional multianual",
+        "Seguimiento y evaluación de la ejecución del POI",
+        "Memoria Anual de AGROIDEAS"
+      ],
+      "Receptor_del_producto": [
+        "AGROIDEAS"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "MIDAGRI",
+        "AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Presupuesto institucional anual de MIDAGRI"
+      ],
+      "Proceso_desplegado_Nivel_2": "E.01.02 Gestión de la programación y ejecución presupuestal",
+      "Producto": [
+        "Programación multianual presupuestaria",
+        "Ejecución presupuestaria",
+        "Seguimiento y evaluación de la ejecución presupuestal institucional",
+        "Nota de modificación presupuestaria",
+        "Informe de propuesta de modificación",
+        "Presupuesto Institucional modificado",
+        "Reporte sobre la ejecución de gastos"
+      ],
+      "Receptor_del_producto": [
+        "AGROIDEAS"
+      ]
+    }
+  ],
+  "Riesgos": "Considerar este campo en la ficha de producto y proceso de último nivel.",
+  "Registros": "Considerar este campo en la ficha de producto y proceso de último nivel.",
+  "Actividades_del_proceso": "Anexo al documento: Diagrama de Proceso (bloques) / Diagrama de Actividades (flujogramas)"
+}
