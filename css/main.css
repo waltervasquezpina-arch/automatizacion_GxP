@@ -63,16 +63,30 @@ body {
     display: grid;
     grid-template-columns: 260px 1fr;
     min-height: 100vh;
+    transition: grid-template-columns 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-container--slim {
+    grid-template-columns: 75px 1fr;
 }
 
 /* --- Sidebar --- */
 .sidebar {
     background-color: var(--color-primary);
     color: white;
-    padding: 2rem 1.5rem;
+    padding: 2rem 1rem;
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    transition: var(--transition);
+    overflow: hidden;
+    position: relative;
+    border-right: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar--slim {
+    padding: 2rem 0.5rem;
+    align-items: center;
 }
 
 .sidebar__logo {
@@ -80,6 +94,15 @@ body {
     font-weight: 800;
     letter-spacing: -0.5px;
     color: var(--color-secondary);
+    white-space: nowrap;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar--slim .sidebar__logo span:last-child {
+    display: none;
 }
 
 .sidebar__nav {
@@ -87,6 +110,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    width: 100%;
 }
 
 .sidebar__link {
@@ -99,6 +123,17 @@ body {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.sidebar--slim .sidebar__link {
+    justify-content: center;
+    padding: 0.75rem;
+}
+
+.sidebar--slim .sidebar__link span:last-child {
+    display: none;
 }
 
 .sidebar__link:hover, .sidebar__link--active {
@@ -108,6 +143,28 @@ body {
 
 .sidebar__link--active {
     border-left: 3px solid var(--color-secondary);
+}
+
+.sidebar__toggle {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.sidebar__toggle:hover {
+    background: var(--color-secondary);
 }
 
 /* --- Main Content --- */
@@ -641,3 +698,10 @@ body {
     color: #166534;
 }
 .hidden { display: none !important; }
+
+/* --- Global Overrides --- */
+textarea {
+    resize: vertical !important;
+    width: 100% !important;
+    min-height: 80px;
+}

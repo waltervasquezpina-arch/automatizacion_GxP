@@ -300,7 +300,7 @@ class AdminManager {
     }
 
     /**
-     * Inyecta Fichas Técnicas masivamente desde archivos JSON alineados al estándar inmutable de MIDAGRI.
+     * Inyecta Fichas Técnicas masivamente, normalizando los campos al estándar GxP v1-2026.
      */
     injectFichas(data) {
         if (!Array.isArray(data)) data = [data];
@@ -308,17 +308,45 @@ class AdminManager {
         const allFichas = db.get('FICHAS_TECNICAS') || {};
 
         data.forEach(item => {
-            // Soporte para ambos estilos de raíz (camel y snake) del estándar inmutable
-            const ficha = item.fichaDeProductoYProceso || item.ficha_de_producto_y_proceso || item;
-            const code = ficha.codigo;
+            const raw = item.fichaDeProductoYProceso || item.ficha_de_producto_y_proceso || item;
+            
+            // Normalización inteligente de campos (Mapper v1-2026)
+            const normalized = {
+                codigo: raw.codigo || raw.Codigo || "",
+                version: raw.version || raw.Version || "01",
+                tipoProceso: raw.tipoProceso || raw.Tipo_de_Proceso || "Misional",
+                nombre: raw.nombre || raw.Nombre || "",
+                duenoProceso: raw.duenoProceso || raw.dueñoDelProceso || raw.Dueno_del_proceso || "",
+                objetivoProceso: raw.objetivoProceso || raw.objetivoDelProceso || raw.Objetivo_del_proceso || "",
+                objetivoEstrategico: raw.objetivoEstrategico || raw.Objetivo_estratégico || "",
+                requisitosNormativos: raw.requisitosNormativos || raw.Requisito_normativo || [],
+                sipoc: this.normalizeSipoc(raw.descripcionProceso || raw.descripcionDelProceso || raw.Descripcion_del_proceso || []),
+                riesgos: raw.riesgos || raw.Riesgos || "",
+                registros: raw.registros || raw.Registros || "",
+                actividades: raw.actividades || raw.actividadesDelProceso || raw.Actividades_del_proceso || "",
+                elaboradoPor: raw.elaboradoPor || (raw.responsables ? raw.responsables.elaboradoPor : ""),
+                revisadoPor: raw.revisadoPor || (raw.responsables ? raw.responsables.revisadoPor : ""),
+                aprobadoPor: raw.aprobadoPor || (raw.responsables ? raw.responsables.aprobadoPor : "")
+            };
 
-            if (code) {
-                allFichas[code] = ficha;
-                console.log(`✅ Ficha ${code} cargada exitosamente.`);
+            if (normalized.codigo) {
+                allFichas[normalized.codigo] = normalized;
+                console.log(`✅ Ficha ${normalized.codigo} normalizada e inyectada.`);
             }
         });
 
         db.save('FICHAS_TECNICAS', allFichas);
+    }
+
+    normalizeSipoc(data) {
+        if (!Array.isArray(data)) return [];
+        return data.map(row => ({
+            proveedor: row.proveedor || row.proveedorDeElementoDeEntrada || row.Proveedor_de_elemento_de_entrada || "",
+            entrada: row.entrada || row.elementosDeEntrada || row.Elementos_de_entrada || "",
+            proceso: row.proceso || row.procesoDesplegado || row.Proceso_desplegado_Nivel_2 || "",
+            producto: row.producto || row.Producto || "",
+            receptor: row.receptor || row.receptorDelProducto || row.Receptor_del_producto || ""
+        }));
     }
 }
 

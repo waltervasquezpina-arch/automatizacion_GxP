@@ -1,28 +1,32 @@
-# AGROIDEAS GxP: Automatización Documental e Inventario
+# Objetivo y Metodología: AGROIDEAS GxP
 
-## 1. Objetivo
-Desarrollar una plataforma centralizada para la gestión, normalización y explotación del Inventario de Procesos de AGROIDEAS. El sistema busca asegurar la integridad de los datos institucionales (GxP) y facilitar la generación automática de documentación técnica de procesos.
+## 🏛️ Propósito del Sistema
+El sistema GxP nace para resolver el **problema público** de la desarticulación en la gestión por procesos dentro de AGROIDEAS. Su valor institucional radica en garantizar la integridad, estandarización y explotación del conocimiento organizacional.
+*   **Soberanía de Datos:** Centralizar el conocimiento técnico que históricamente reside en archivos aislados, convirtiéndolo en un activo institucional.
+*   **Transparencia:** Asegurar que cada actividad esté alineada a la normativa vigente y sea fácilmente auditable.
+*   **Eficiencia Operativa:** Reducir drásticamente la brecha de error humano y el tiempo de redacción de documentos técnicos mediante el uso de Inteligencia Artificial.
 
-## 2. Finalidad
-Reducir la brecha de error humano en la catalogación de procesos y agilizar la arquitectura de directorios institucionales, proporcionando una base de datos sólida para la futura generación de fichas técnicas mediante Inteligencia Artificial.
+## 🎯 Alcance y Límites
+### **Alcance (Lo que el sistema HACE):**
+*   **Gestión de Inventario:** Normalización y jerarquización de procesos desde el Nivel 0 al 4.
+*   **Asistencia de Caracterización:** Generación asistida por IA de modelos SIPOC y fichas técnicas.
+*   **Exportación Normativa:** Creación automática de expedientes en formatos institucionales (Word/JSON).
+*   **Persistencia Local:** Control total del usuario sobre sus datos mediante sistemas de Backup Maestro.
 
-## 3. Metodología de Trabajo
-Se ha implementado una metodología de 4 fases progresivas:
+### **Límites (Lo que el sistema NO HACE):**
+*   No reemplaza los sistemas de trámite documentario (SGD) institucionales.
+*   No realiza aprobaciones automáticas; la validación final es responsabilidad exclusiva de los dueños de procesos.
+*   No gestiona ejecución presupuestal ni indicadores financieros.
 
-### Fase 1: Ingesta y Normalización
-- Captura de datos desde fuentes heterogéneas (PDF, Excel, Gemini).
-- Aplicación de lógica de "Forward Fill" para herencia jerárquica.
-- Limpieza y sanitización de caracteres Especiales.
+## ⚙️ Metodología de Desarrollo
+Se utiliza un enfoque de **Ciclos Iterativos Rápidos (VibeCoding)**, alineado con las directivas de modernización de la **Secretaría de Gestión Pública (SGP-PCM)**. El desarrollo se divide en 4 fases progresivas:
 
-### Fase 2: Arquitectura de Directorios
-- Transformación del inventario plano en una estructura jerárquica (Nivel 0 al 4).
-- Generación de scripts para Google Drive y descarga local en formato ZIP.
+1.  **Fase 1: Ingesta y Normalización:** Captura de datos heterogéneos y aplicación de lógica de "Forward Fill".
+2.  **Fase 2: Arquitectura de Directorios:** Transformación de datos planos en estructuras jerárquicas navegables.
+3.  **Fase 3: Consolidación (Completado):** Establecimiento del archivo `inventario_maestro.json` como única fuente de verdad (Seed File).
+4.  **Fase 4: Explotación e IA (En Ejecución):** Implementación de IA Brain PRO para la redacción y validación GxP.
 
-### Fase 3: Consolidación y Fuente Única
-- Eliminación de redundancias de datos.
-- Establecimiento del archivo `inventario_maestro.json` como única fuente de verdad.
-- Implementación de un Core Engine central para toda la lógica de negocio.
-
-### Fase 4: Explotación y Generación (En Proceso)
-- Redacción de fichas técnicas asistida por IA.
-- Control de riesgos y puntos críticos institucionales.
+## 👥 Roles del Equipo
+*   **Desarrollo y Automatización:** Agentes de IA y Especialista en Desarrollo de Sistemas.
+*   **Análisis y Calidad GxP:** Especialistas de la Unidad de Planeamiento y Presupuesto (UPP) encargados de validar la lógica técnica.
+*   **Aprobadores:** Jefatura de la UPP y Dirección Ejecutiva, responsables de oficializar los procesos sistematizados.

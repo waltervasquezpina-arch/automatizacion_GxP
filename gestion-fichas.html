@@ -21,14 +21,17 @@
 <body>
     <div class="app-container">
         <aside class="sidebar">
-            <div class="sidebar__logo">AGROIDEAS GxP</div>
+            <div class="sidebar__logo">
+                <span style="font-size: 1.5rem;">🏢</span>
+                <span>AGROIDEAS GxP</span>
+            </div>
             <nav>
                 <ul class="sidebar__nav">
-                    <li><a href="index.html" class="sidebar__link">📊 Dashboard</a></li>
-                    <li><a href="admin-ingesta.html" class="sidebar__link">📥 Ingesta de Datos</a></li>
-                    <li><a href="admin-directorios.html" class="sidebar__link">📂 Gestión de Directorios</a></li>
-                    <li><a href="gestion-fichas.html" class="sidebar__link sidebar__link--active">📋 Gestión de Fichas</a></li>
-                    <li><a href="documentos-procesos.html" class="sidebar__link">📝 Doc. de Procesos</a></li>
+                    <li><a href="index.html" class="sidebar__link"><span>📊</span> <span>Dashboard</span></a></li>
+                    <li><a href="admin-ingesta.html" class="sidebar__link"><span>📥</span> <span>Ingesta de Datos</span></a></li>
+                    <li><a href="admin-directorios.html" class="sidebar__link"><span>📂</span> <span>Gestión de Directorios</span></a></li>
+                    <li><a href="gestion-fichas.html" class="sidebar__link sidebar__link--active"><span>📋</span> <span>Gestión de Fichas</span></a></li>
+                    <li><a href="documentos-procesos.html" class="sidebar__link"><span>📝</span> <span>Doc. de Procesos</span></a></li>
                 </ul>
             </nav>
         </aside>
@@ -72,6 +75,7 @@
     <script src="js/core-engine.js"></script>
     <script src="js/export-engine.js"></script>
     <script src="js/admin-manager.js"></script>
+    <script src="js/ui-ux.js"></script>
     <script>
         function exportFicha(code) {
             const ficha = core.getFicha(code);

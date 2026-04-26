@@ -6,6 +6,10 @@
     <title>Editor de Ficha Técnica GxP | AGROIDEAS</title>
     <link rel="stylesheet" href="css/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Librerías para Generación de Word desde Plantilla -->
+    <script src="https://unpkg.com/pizzip@3.1.7/dist/pizzip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.50.0/docxtemplater.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <style>
         :root {
             --midagri-blue: #004d3d;
@@ -206,14 +210,17 @@
 <body>
     <div class="app-container">
         <aside class="sidebar">
-            <div class="sidebar__logo">AGROIDEAS GxP</div>
+            <div class="sidebar__logo">
+                <span style="font-size: 1.5rem;">🏢</span>
+                <span>AGROIDEAS GxP</span>
+            </div>
             <nav>
                 <ul class="sidebar__nav">
-                    <li><a href="index.html" class="sidebar__link">📊 Dashboard</a></li>
-                    <li><a href="admin-ingesta.html" class="sidebar__link">📥 Ingesta de Datos</a></li>
-                    <li><a href="admin-directorios.html" class="sidebar__link">📂 Gestión de Directorios</a></li>
-                    <li><a href="gestion-fichas.html" class="sidebar__link">📋 Gestión de Fichas</a></li>
-                    <li><a href="documentos-procesos.html" class="sidebar__link">📝 Doc. de Procesos</a></li>
+                    <li><a href="index.html" class="sidebar__link"><span>📊</span> <span>Dashboard</span></a></li>
+                    <li><a href="admin-ingesta.html" class="sidebar__link"><span>📥</span> <span>Ingesta de Datos</span></a></li>
+                    <li><a href="admin-directorios.html" class="sidebar__link"><span>📂</span> <span>Gestión de Directorios</span></a></li>
+                    <li><a href="gestion-fichas.html" class="sidebar__link"><span>📋</span> <span>Gestión de Fichas</span></a></li>
+                    <li><a href="documentos-procesos.html" class="sidebar__link"><span>📝</span> <span>Doc. de Procesos</span></a></li>
                 </ul>
             </nav>
         </aside>
@@ -222,8 +229,8 @@
             <div class="sticky-toolbar">
                 <div class="sticky-toolbar__inner">
                     <div>
-                        <h1 class="header__title" id="page-title" style="margin:0; font-size:1.4rem;">Ficha Técnica</h1>
-                        <span style="font-size:0.7rem; font-weight:700; color:var(--midagri-gold); text-transform:uppercase;">Standard GxP-MIDAGRI v2025</span>
+                        <h1 class="header__title" id="page-title" style="margin:0; font-size:1.4rem;">Ficha de Productos y Procesos</h1>
+                        <span style="font-size:0.7rem; font-weight:700; color:var(--midagri-gold); text-transform:uppercase;">Standard GxP-AGROIDEAS v.01-2026</span>
                     </div>
                     <div style="display:flex; gap:12px;">
                         <button class="btn btn--outline" onclick="window.history.back()">✕ Cancelar</button>
@@ -361,6 +368,7 @@
 
     <script src="js/storage.js"></script>
     <script src="js/core-engine.js"></script>
+    <script src="js/ui-ux.js"></script>
     <script src="js/export-engine.js"></script>
     <script>
         const params = new URLSearchParams(window.location.search);
@@ -379,34 +387,28 @@
             document.getElementById('f-codigo').value = currentCode;
             document.getElementById('f-version').value = ficha.version || '01';
             document.getElementById('f-nombre').value = ficha.nombre || (findNodeName(tree, currentCode)) || '';
-            document.getElementById('f-tipo').value = ficha.tipoDeProceso || (currentCode.startsWith('E') ? 'Estratégico' : currentCode.startsWith('M') ? 'Misional' : 'Soporte');
-            document.getElementById('f-dueno').value = ficha.dueñoDelProceso || '';
-            document.getElementById('f-objetivo-proceso').value = ficha.objetivoDelProceso || '';
-            document.getElementById('f-objetivo-estrategico').value = ficha.objetivoEstrategico || '';
+            document.getElementById('f-tipo').value = ficha.tipoProceso || (currentCode.startsWith('E') ? 'Estratégico' : currentCode.startsWith('M') ? 'Misional' : 'Soporte');
+            document.getElementById('f-dueno').value = ficha.duenoProceso || '';
+            document.getElementById('f-objetivo-proceso').value = Array.isArray(ficha.objetivoProceso) ? ficha.objetivoProceso.join('\n') : (ficha.objetivoProceso || '');
+            document.getElementById('f-objetivo-estrategico').value = Array.isArray(ficha.objetivoEstrategico) ? ficha.objetivoEstrategico.join('\n') : (ficha.objetivoEstrategico || '');
             
             const normas = ficha.requisitosNormativos || [];
+            const normContainer = document.getElementById('normativa-list');
+            normContainer.innerHTML = '';
             if(normas.length === 0) addNormativa(); else normas.forEach(n => addNormativa(n));
 
-            let sipocData = [];
-            if (ficha.descripcionDelProceso && ficha.descripcionDelProceso.procesosNivel1) {
-                sipocData = ficha.descripcionDelProceso.procesosNivel1;
-            } else if (Array.isArray(ficha.descripcion_del_proceso)) {
-                sipocData = ficha.descripcion_del_proceso;
-            } else if (ficha.sipoc) {
-                sipocData = ficha.sipoc;
-            }
-
+            let sipocData = ficha.sipoc || [];
+            const sipocBody = document.getElementById('sipoc-body');
+            sipocBody.innerHTML = '';
             if(sipocData.length === 0) addSipocRow(); else sipocData.forEach(row => addSipocRow(row));
 
             document.getElementById('f-riesgos').value = ficha.riesgos || 'Considerar este campo en la ficha de producto y proceso de último nivel.';
             document.getElementById('f-registros').value = ficha.registros || 'Considerar este campo en la ficha de producto y proceso de último nivel.';
-            document.getElementById('f-actividades').value = ficha.actividadesDelProceso || 'Anexo al documento: Diagrama de Proceso (bloques) / Diagrama de Actividades (flujogramas)';
+            document.getElementById('f-actividades').value = ficha.actividades || 'Anexo al documento: Diagrama de Proceso (bloques) / Diagrama de Actividades (flujogramas)';
             
-            if(ficha.responsables) {
-                document.getElementById('f-elab').value = ficha.responsables.elaboradoPor || '';
-                document.getElementById('f-rev').value = ficha.responsables.revisadoPor || '';
-                document.getElementById('f-aprob').value = ficha.responsables.aprobadoPor || '';
-            }
+            document.getElementById('f-elab').value = ficha.elaboradoPor || '';
+            document.getElementById('f-rev').value = ficha.revisadoPor || '';
+            document.getElementById('f-aprob').value = ficha.aprobadoPor || '';
         }
 
         function findNodeName(tree, code) {
@@ -440,11 +442,11 @@
             const tbody = document.getElementById('sipoc-body');
             const tr = document.createElement('tr');
             
-            const proc = data.proceso || data.procesos_nivel_1 || '';
-            const prov = data.proveedorDeElementoDeEntrada || data.proveedor_de_elemento_de_entrada || '';
-            const inputs = Array.isArray(data.elementosDeEntrada) ? data.elementosDeEntrada.join('\n') : (data.elementos_de_entrada || '');
-            const prod = Array.isArray(data.producto) ? data.producto.join('\n') : (data.producto || '');
-            const recept = Array.isArray(data.receptorDelProducto) ? data.receptorDelProducto.join('\n') : (data.receptor_del_producto || '');
+            const prov = data.proveedor || "";
+            const inputs = Array.isArray(data.entrada) ? data.entrada.join('\n') : (data.entrada || "");
+            const proc = data.proceso || "";
+            const prod = Array.isArray(data.producto) ? data.producto.join('\n') : (data.producto || "");
+            const recept = data.receptor || "";
 
             tr.innerHTML = `
                 <td><textarea class="input-modern sipoc-prov" style="font-size:0.75rem;">${prov}</textarea></td>
@@ -460,43 +462,36 @@
         function collectData() {
             const sipocRows = Array.from(document.querySelectorAll('#sipoc-body tr')).map(tr => {
                 return {
-                    proveedorDeElementoDeEntrada: tr.querySelector('.sipoc-prov').value,
-                    elementosDeEntrada: tr.querySelector('.sipoc-in').value.split('\n').filter(s => s.trim()),
+                    proveedor: tr.querySelector('.sipoc-prov').value,
+                    entrada: tr.querySelector('.sipoc-in').value.split('\n').filter(s => s.trim()),
                     proceso: tr.querySelector('.sipoc-act').value,
                     producto: tr.querySelector('.sipoc-prod').value.split('\n').filter(s => s.trim()),
-                    receptorDelProducto: tr.querySelector('.sipoc-rec').value.split('\n').filter(s => s.trim())
+                    receptor: tr.querySelector('.sipoc-rec').value
                 };
             });
 
             return {
-                fichaDeProductoYProceso: {
-                    titulo: "FICHA DE PRODUCTO Y PROCESO",
-                    codigo: document.getElementById('f-codigo').value,
-                    version: document.getElementById('f-version').value,
-                    tipoDeProceso: document.getElementById('f-tipo').value,
-                    nombre: document.getElementById('f-nombre').value,
-                    dueñoDelProceso: document.getElementById('f-dueno').value,
-                    objetivoDelProceso: document.getElementById('f-objetivo-proceso').value,
-                    objetivoEstrategico: document.getElementById('f-objetivo-estrategico').value,
-                    requisitosNormativos: Array.from(document.querySelectorAll('.norm-input')).map(i => i.value).filter(s => s.trim()),
-                    descripcionDelProceso: {
-                        procesosNivel1: sipocRows
-                    },
-                    riesgos: document.getElementById('f-riesgos').value,
-                    registros: document.getElementById('f-registros').value,
-                    actividadesDelProceso: document.getElementById('f-actividades').value,
-                    responsables: {
-                        elaboradoPor: document.getElementById('f-elab').value,
-                        revisadoPor: document.getElementById('f-rev').value,
-                        aprobadoPor: document.getElementById('f-aprob').value
-                    }
-                }
+                codigo: document.getElementById('f-codigo').value,
+                version: document.getElementById('f-version').value,
+                tipoProceso: document.getElementById('f-tipo').value,
+                nombre: document.getElementById('f-nombre').value,
+                duenoProceso: document.getElementById('f-dueno').value,
+                objetivoProceso: document.getElementById('f-objetivo-proceso').value,
+                objetivoEstrategico: document.getElementById('f-objetivo-estrategico').value,
+                requisitosNormativos: Array.from(document.querySelectorAll('.norm-input')).map(i => i.value).filter(s => s.trim()),
+                sipoc: sipocRows,
+                riesgos: document.getElementById('f-riesgos').value,
+                registros: document.getElementById('f-registros').value,
+                actividades: document.getElementById('f-actividades').value,
+                elaboradoPor: document.getElementById('f-elab').value,
+                revisadoPor: document.getElementById('f-rev').value,
+                aprobadoPor: document.getElementById('f-aprob').value
             };
         }
 
         function saveData() {
-            const result = collectData();
-            core.saveFicha(currentCode, result.fichaDeProductoYProceso);
+            const ficha = collectData();
+            core.saveFicha(currentCode, ficha);
             alert('✅ Registro Guardado: La ficha técnica ha sido actualizada en la base de datos local.');
         }
 
@@ -512,7 +507,7 @@
 
         function exportToWord() {
             const data = collectData();
-            exporter.toWord(data.fichaDeProductoYProceso);
+            exporter.toWordFromTemplate(data);
         }
     </script>
 </body>

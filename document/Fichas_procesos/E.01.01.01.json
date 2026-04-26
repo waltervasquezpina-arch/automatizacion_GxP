@@ -1,0 +1,33 @@
+{
+  "codigo": "E.01.01.01",
+  "version": "01",
+  "tipoProceso": "Estratégico",
+  "nombre": "Diseño de la política y programación de planes institucionales",
+  "duenoProceso": "Unidad de Planeamiento y Presupuesto",
+  "objetivoProceso": "Formular, diseñar y programar los planes institucionales de AGROIDEAS en concordancia con las políticas nacionales sectoriales, los lineamientos del ente rector y el Plan Estratégico Institucional del MIDAGRI, asegurando la articulación de los objetivos estratégicos con la operatividad institucional.",
+  "objetivoEstrategico": "OEI.05 Modernizar la gestión institucional en el MIDAGRI\nAEI.05.01 Instrumentos de gestión implementados en el ámbito del MIDAGRI:\nAOI00129700143 - Conducción del planeamiento institucional",
+  "requisitosNormativos": [
+    "[Insertar el valor de los Requisitos Normativos de la ficha E.01 aquí]"
+  ],
+  "sipoc": [
+    {
+      "proveedor": "MIDAGRI, CEPLAN, Dirección Ejecutiva de AGROIDEAS",
+      "entrada": [
+        "Plan Estratégico Institucional (PEI) del MIDAGRI",
+        "Políticas Nacionales Sectoriales",
+        "Guías y directivas de planeamiento"
+      ],
+      "proceso": "Diseño de la política y programación de planes institucionales",
+      "producto": [
+        "Programación operativa institucional multianual"
+      ],
+      "receptor": "MIDAGRI, CEPLAN, Unidades funcionales de AGROIDEAS"
+    }
+  ],
+  "riesgos": "- Desalineamiento de la programación operativa con los objetivos del Plan Estratégico Institucional (PEI) del MIDAGRI.\n- Retraso en la formulación de los planes institucionales por demoras en la remisión de información de las unidades funcionales.\n- Cambios normativos o directivas imprevistas por parte del ente rector (CEPLAN) que exijan reprocesos continuos.",
+  "registros": "- Matriz de articulación de políticas y planes.\n- Proyecto de Programación Operativa Institucional Multianual.\n- Informes técnicos de sustento de la programación.\n- Actas de reuniones de trabajo con áreas funcionales.",
+  "actividades": "Anexo al documento: Diagrama de Proceso (bloques) / Diagrama de Actividades (flujogramas)",
+  "elaboradoPor": "Firma del servidor que elabora el documento",
+  "revisadoPor": "Firma del responsable de unidad de organización encargada de la gestión por procesos",
+  "aprobadoPor": "Firma del Dueño del proceso"
+}

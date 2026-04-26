@@ -1,34 +1,42 @@
-# Arquitectura y Stack Tecnológico
+# Arquitectura y Stack Tecnológico: AGROIDEAS GxP
 
-## 1. Stack de Tecnologías
-El aplicativo se ha desarrollado bajo un enfoque **"Vanilla & Lightweight"** para garantizar portabilidad y rapidez sin dependencias de servidor (Local-first).
+## 🗺️ Diagrama de Arquitectura General
+El sistema opera bajo un modelo de **Soberanía de Datos Local**, donde el procesamiento y la persistencia ocurren íntegramente en el cliente (Browser), eliminando la dependencia de servidores externos y garantizando la privacidad institucional.
 
-- **Frontend:** HTML5 Semántico y CSS3 Vanila (Diseño Premium con Variables CSS).
-- **Lógica:** JavaScript ES6+ (Programación Orientada a Objetos - Core Engine).
-- **Persistencia:** Browser LocalStorage con motor de sincronización asíncrona.
-- **Librerías Externas:**
-    - `JSZip.js`: Generación de archivos comprimidos en el lado del cliente.
-    - `FileSaver.js`: Gestión de descargas de archivos.
-    - `Google Fonts`: Tipografía Inter para legibilidad institucional.
-
-## 2. Estructura de Archivos
-| Ruta | Funcionalidad |
-| :--- | :--- |
-| `index.html` | Dashboard principal y configuración de IA. |
-| `admin-ingesta.html` | Consola de carga masiva, validación y sanitización JSON. |
-| `admin-directorios.html` | Generador de estructura de carpetas (Local/Cloud). |
-| `inventario.html` | Visor jerárquico de procesos (Acordeones). |
-| `js/core-engine.js` | **Cerebro del Sistema.** Centraliza la jerarquía y validación. |
-| `js/storage.js` | Capa de persistencia y lógica de Auto-Bootstrap. |
-| `js/ai-handler.js` | Puente de comunicación con modelos LLM (Gemini/LM Studio). |
-| `datos/inventario_maestro.json` | **Fuente Única de Verdad.** Base de datos JSON maestra. |
-
-## 3. Diagrama de Estructura (Mermaid)
 ```mermaid
 graph TD
-    JSON[(inventario_maestro.json)] -->|Bootstrap| Storage[js/storage.js]
-    Storage -->|Provee Datos| Core[js/core-engine.js]
-    Core -->|Alimenta| UI[Vistas HTML]
-    UI -->|Admin Ingesta| Core
-    Core -->|Normaliza| Storage
+    User((Usuario)) --> UI[Interfaz Web HTML5/CSS3]
+    UI --> Core[Core Engine JS - POO]
+    Core --> Storage[(LocalStorage / IndexDB)]
+    Core --> AI_Cloud[Google Gemini API]
+    Core --> AI_Local[LM Studio / Inferencia Local]
+    Storage --> Backup[JSON Semilla / Backup Maestro]
+    Core --> Export[Motor Docx.js / JSZip]
 ```
+
+## 🛠️ Detalle del Stack Tecnológico
+*   **Frontend:** 
+    *   **Lenguajes:** HTML5 Semántico y CSS3 Vanila.
+    *   **Metodología:** **BEM (Block Element Modifier)** para la escalabilidad de estilos.
+    *   **Estética:** Diseño Premium basado en *Glassmorphism* y variables CSS dinámicas para el cumplimiento de la marca institucional.
+*   **Backend (Client-Side Logic):** 
+    *   **Lenguaje:** JavaScript ES6+ utilizando un enfoque de **Programación Orientada a Objetos (POO)**. 
+    *   **Arquitectura:** El sistema no posee backend tradicional (PHP/Node); toda la lógica de negocio, validación GxP y persistencia reside en el motor del navegador.
+*   **Herramientas Auxiliares:**
+    *   **IA Brain PRO:** Motor de inteligencia con soporte dual para Google Gemini y LM Studio (vía OpenAI SDK Compatible).
+    *   **Dependencias Críticas:** `Docx.js` (Generación de Word), `JSZip` (Estructuras de carpetas) y `FileSaver.js`.
+
+## 📐 Patrones de Diseño y Convenciones
+*   **Arquitectura Modular:** Lógica dividida en controladores desacoplados:
+    *   `storage.js`: Gestión de persistencia y bootstrap.
+    *   `core-engine.js`: Procesamiento de jerarquías y reglas de negocio.
+    *   `ai-handler.js`: Orquestación de modelos LLM.
+*   **Convenciones de Codificación:**
+    *   Variables y funciones en `camelCase`.
+    *   Nombres de Claves en LocalStorage en `UPPER_SNAKE_CASE`.
+    *   Validación de integridad mediante regex institucional para códigos de proceso.
+
+## 🚀 Entornos y Despliegue
+*   **Desarrollo:** Local con soporte de *Live Server* para gestión de módulos ES6.
+*   **Producción:** Despliegue estático. No requiere servidor de aplicaciones ni base de datos relacional. Puede ejecutarse desde una intranet local o servicios de hosting estático (GitHub Pages, Vercel, IIS).
+*   **Requisitos:** Navegador moderno (Chrome/Edge/Firefox) con soporte para LocalStorage y Web Workers (para IA).
