@@ -12,14 +12,15 @@
     "AEI.05.01 Instrumentos de gestión implementados en el ámbito del MIDAGRI:",
     "- AOI00129700128 - Adquisición de bienes y servicios requeridos por el Programa"
   ],
-  "Requisito_normativo": ●	Decreto Legislativo N° 1439, que aprueba el Sistema Nacional de Abastecimiento.
-●	Decreto Supremo N° 344-2018/EF, aprueban el Reglamento de la Ley N° 30225, Ley de Contrataciones del Estado.
-●	Decreto Supremo N° 217-2019-EF, aprueban el Reglamento del Decreto Legislativo N° 1439, Decreto Legislativo del Sistema Nacional de Abastecimiento.
-●	Decreto Supremo N° 008-2021 -VIVIENDA, Decreto Supremo que aprueba el Reglamento de la Ley N° 29151, Ley General del Sistema Nacional de Bienes Estatales.
-●	Resolución Ministerial N° 0188-2025-MIDAGRI, que aprueba el Manual de Operaciones (MOP) del Programa de Compensaciones para la Competitividad (AGROIDEAS)
-●	Resolución N° 046-2015/SBN, que aprueba la Directiva N° 001-2015-SBN, Procedimiento de gestión de los bienes muebles estatales.
-●	Resolución N° 027-2013/SBN-DNR, que aprueba la Directiva N° 003-2013/SBN "Procedimientos para la gestión adecuada de los bienes muebles estatales calificados como residuos de aparatos eléctricos y electrónicos - RAEE”.
-,
+  "Requisito_normativo": [
+    "Decreto Legislativo N° 1439, que aprueba el Sistema Nacional de Abastecimiento.",
+    "Decreto Supremo N° 344-2018/EF, aprueban el Reglamento de la Ley N° 30225, Ley de Contrataciones del Estado.",
+    "Decreto Supremo N° 217-2019-EF, aprueban el Reglamento del Decreto Legislativo N° 1439, Decreto Legislativo del Sistema Nacional de Abastecimiento.",
+    "Decreto Supremo N° 008-2021-VIVIENDA, Decreto Supremo que aprueba el Reglamento de la Ley N° 29151, Ley General del Sistema Nacional de Bienes Estatales.",
+    "Resolución Ministerial N° 0188-2025-MIDAGRI, que aprueba el Manual de Operaciones (MOP) del Programa de Compensaciones para la Competitividad (AGROIDEAS)",
+    "Resolución N° 046-2015/SBN, que aprueba la Directiva N° 001-2015-SBN, Procedimiento de gestión de los bienes muebles estatales.",
+    "Resolución N° 027-2013/SBN-DNR, que aprueba la Directiva N° 003-2013/SBN \"Procedimientos para la gestión adecuada de los bienes muebles estatales calificados como residuos de aparatos eléctricos y electrónicos - RAEE\"."
+  ],
   "Descripcion_del_proceso": [
     {
       "Proveedor_de_elemento_de_entrada": [
