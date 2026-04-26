@@ -1,0 +1,58 @@
+{
+  "Codigo": "S.06",
+  "Version": "01",
+  "Tipo_de_Proceso": "Soporte",
+  "Nombre": "Gestión de la imagen y comunicación",
+  "Dueno_del_proceso": "Dirección Ejecutiva",
+  "Objetivo_del_proceso": [
+    "Planificar y ejecutar las actividades relacionadas a la conducción de estrategias de comunicación interna y externa de AGROIDEAS y la promoción de los servicios que brinda a los usuarios, con el fin de fortalecer una adecuada comunicación e imagen de AGROIDEAS."
+  ],
+  "Objetivo_estratégico": [
+    "OEI.05 Modernizar la gestión institucional en el MIDAGRI",
+    "AEI.05.01 Instrumentos de gestión implementados en el ámbito del MIDAGRI:",
+    "- AOI00129700005 - Difusión y promoción del programa"
+  ],
+  "Requisito_normativo": [
+    "Ley N° 28874, Ley que regula la Publicidad Estatal.",
+    "Decreto Legislativo Nº 1077, que crea el Programa de Compensaciones para la Competitividad",
+    "Resolución Ministerial Nº 387-2017-MINAGRI, que aprueba la Directiva Sectorial denominada \"Normas para la estandarización del Material Audiovisual y Escrito que emite el Ministerio de Agricultura y Riego\"",
+    "Resolución Ministerial N° 0421-2018-MINAGRI, que aprueba las Disposiciones en materia de Comunicaciones e Imagen Institucional para las unidades orgánicas, órganos, Programas, Proyectos Especiales y Organismos Públicos Adscritos del Ministerio de Agricultura y Riego.",
+    "Resolución Ministerial N° 0195-2021-MIDAGRI, que aprueba el “Manual para la Implementación del Protocolo y Ceremonias del Sector Agrario y de Riego”.",
+    "Resolución Ministerial N° 0188-2025-MIDAGRI, que aprueba el Manual de Operaciones (MOP) del Programa de Compensaciones para la Competitividad (AGROIDEAS)"
+  ],
+  "Descripcion_del_proceso": [
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Dirección Ejecutiva de AGROIDEAS",
+        "Unidad funcional usuaria de AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Plan Operativo Institucional",
+        "Plan de Comunicación Externa",
+        "Piezas comunicacionales",
+        "Plan de trabajo de campaña",
+        "Necesidad de elaborar piezas comunicacionales",
+        "Solicitud de Informes y/o notas de prensa",
+        "Solicitud de Publicación en redes sociales"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.06.01 Gestión de la comunicación",
+      "Producto": [
+        "Campañas de comunicación",
+        "Comunicaciones estratégicas oficiales"
+      ],
+      "Receptor_del_producto": [
+        "Dirección Ejecutiva de AGROIDEAS",
+        "Unidad funcional usuaria de AGROIDEAS"
+      ]
+    }
+  ],
+  "Riesgos": [
+    "Considerar este campo en la ficha de producto y proceso de último nivel."
+  ],
+  "Registros": [
+    "Considerar este campo en la ficha de producto y proceso de último nivel."
+  ],
+  "Actividades_del_proceso": [
+    "Anexo al documento: Diagrama de Proceso (bloques) / Diagrama de Actividades (flujogramas)"
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "Codigo": "S.05",
+  "Version": "01",
+  "Tipo_de_Proceso": "Soporte",
+  "Nombre": "Gestión documentaria y atención ciudadana",
+  "Dueno_del_proceso": "Unidad de Administración",
+  "Objetivo_del_proceso": [
+    "Conducir y supervisar la atención a los usuarios de AGROIDEAS sobre los servicios que brinda y actividades que desarrolla; así como la adecuada y oportuna gestión documental (recepción, derivación y/o archivamiento)."
+  ],
+  "Objetivo_estratégico": [
+    "OEI.05 Modernizar la gestión institucional en el MIDAGRI",
+    "AEI.05.01 Instrumentos de gestión implementados en el ámbito del MIDAGRI:",
+    "- AOI00129700130 - Implementación del plan anual de trabajo archivístico del Programa"
+  ],
+  "Requisito_normativo": [
+    "Ley N° 27806, Ley de Transparencia y Acceso a la Información Pública.",
+    "Ley N° 31075, Ley de Organización y Funciones del Ministerio de Desarrollo Agrario y Riego - MIDAGRI.",
+    "Decreto Legislativo N° 681, que dictan normas que regulan el uso de tecnologías avanzadas en materia de archivo de documentos e información tanto respecto a la elaborada en forma convencional cuanto la producida por procedimientos informáticos en computadoras",
+    "Decreto Legislativo N° 1211, decreto Legislativo que aprueba medidas para el fortalecimiento e implementación de servicios públicos integrados a través de ventanillas únicas e intercambio de información entre entidades públicas.",
+    "Decreto Supremo N° 011-2011-PCM, Decreto Supremo que aprueba el Reglamento del Libro de Reclamaciones del Código de Protección y Defensa del Consumidor",
+    "Decreto Supremo N° 004-2019-JUS, Decreto Supremo que aprueba el Texto Único Ordenado de la Ley N° 27444 - Ley del Procedimiento Administrativo General.",
+    "Decreto Supremo N° 090-2019-PCM, aprueban el Reglamento del Decreto Legislativo N° 1211, Decreto Legislativo que aprueba medidas para el fortalecimiento e implementación de servicios integrados y servicios y espacios compartidos.",
+    "Resolución Ministerial N°186-2015-PCM, aprueban el Manual para Mejorar la Atención a la Ciudadanía en las Entidades de la Administración Pública.",
+    "Resolución Ministerial N° 0257-2016-MINAGRI, que aprueba la Directiva Sectorial N° 003-2016-MINAGRI-DM, \"Procedimiento para la recepción, digitalización, derivación y atención de documentos en la gestión documentaría de las entidades del Ministerio de Agricultura y Riego\".",
+    "Resolución Ministerial N° 0188-2021-MIDAGRI, aprueban el Manual de Operaciones (MOP) del Programa de Compensaciones para la Competitividad (AGROIDEAS).",
+    "Resolución de Secretaría de Gobierno Digital N° 001-2017-PCM/SEGDI, que aprueba el Modelo de Gestión Documental en el marco del Decreto Legislativo N° 1310.",
+    "Resolución de Secretaría de Gestión Pública N° 011-2022-PCM/SGP, que aprueba Norma Técnica N° 001-2022-PCM-SGP, Norma Técnica para la Gestión de la Calidad de Servicios del Sector Público.",
+    "Resolución Jefatural N° 179-2019-AGN/SG que aprueba la Directiva N° 009-2019-AGN/DDPA \"Norma para la administración de archivos en la entidad pública.\""
+  ],
+  "Descripcion_del_proceso": [
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Unidades funcionales de AGROIDEAS",
+        "Organizaciones agrarias - OAS",
+        "Productores agrarios",
+        "Ciudadanía"
+      ],
+      "Elementos_de_entrada": [
+        "Documentación ingresada a mesa de partes",
+        "Documentación generada por los órganos y unidades funcionales de AGROIDEAS",
+        "Dispositivos legales, actas, convenios, contratos, adendas de AGROIDEAS"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.05.01 Gestión documental",
+      "Producto": [
+        "Atención de documentos administrativos"
+      ],
+      "Receptor_del_producto": [
+        "Unidades funcionales de AGROIDEAS",
+        "Organizaciones agrarias - OAS",
+        "Productores agrarios",
+        "Ciudadanía",
+        "Archivo General de la Nación"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Unidades funcionales de AGROIDEAS",
+        "Organizaciones agrarias - OAS",
+        "Productores agrarios",
+        "Ciudadanía"
+      ],
+      "Elementos_de_entrada": [
+        "Solicitud de acceso a la información pública de AGROIDEAS",
+        "Consultas presentadas por las organizaciones agrarias – OAS, productores agrarios, ciudadanía.",
+        "Reclamos",
+        "Visitas del ciudadano"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.05.02 Gestión de atención al ciudadano",
+      "Producto": [
+        "Atención de consultas, reclamos y visitas de la ciudadanía"
+      ],
+      "Receptor_del_producto": [
+        "Unidades funcionales de AGROIDEAS",
+        "Organizaciones agrarias - OAS",
+        "Productores agrarios",
+        "Ciudadanía",
+        "Archivo General de la Nación"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Unidades funcionales de AGROIDEAS",
+        "Organizaciones agrarias - OAS",
+        "Productores agrarios",
+        "Ciudadanía"
+      ],
+      "Elementos_de_entrada": [
+        "Cronograma de transferencia",
+        "Cronograma de eliminación de documentos",
+        "Solicitud de documentos del archivo central de AGROIDEAS"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.05.03 Gestión de archivos",
+      "Producto": [
+        "Acervo documental institucional organizado, conservado y disponible"
+      ],
+      "Receptor_del_producto": [
+        "Unidades funcionales de AGROIDEAS",
+        "Organizaciones agrarias - OAS",
+        "Productores agrarios",
+        "Ciudadanía",
+        "Archivo General de la Nación"
+      ]
+    }
+  ],
+  "Riesgos": [
+    "Considerar este campo en la ficha de producto y proceso de último nivel."
+  ],
+  "Registros": [
+    "Considerar este campo en la ficha de producto y proceso de último nivel."
+  ],
+  "Actividades_del_proceso": [
+    "Anexo al documento: Diagrama de Proceso (bloques) / Diagrama de Actividades (flujogramas)"
+  ]
+}

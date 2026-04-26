@@ -1,0 +1,76 @@
+{
+  "Codigo": "S.04",
+  "Version": "01",
+  "Tipo_de_Proceso": "Soporte",
+  "Nombre": "Gestión de tecnologías de la información",
+  "Dueno_del_proceso": "Unidad de Administración",
+  "Objetivo_del_proceso": [
+    "Planificación e implementación de los sistemas de información, innovación, desarrollo y soporte de la infraestructura tecnológica de AGROIDEAS."
+  ],
+  "Objetivo_estratégico": [
+    "OEI.05 Modernizar la gestión institucional en el MIDAGRI",
+    "AEI.05.01 Instrumentos de gestión implementados en el ámbito del MIDAGRI:",
+    "- AOI00129700127 - Gestión de sistemas informáticos"
+  ],
+  "Requisito_normativo": [
+    "Ley N° 27269, Ley de Firmas y Certificados Digitales.",
+    "Ley N° 27291, Ley que modifica el Código Civil permitiendo la utilización de los medios electrónicos para la comunicación de la manifestación de voluntad and la utilización de la firma electrónica.",
+    "Ley N° 27309, Ley que incorpora los delitos informáticos al Código Penal.",
+    "Ley N° 28612, Ley que norma el uso, adquisición y adecuación del software en la administración pública.",
+    "Ley N° 28493, Ley que regula el uso del correo electrónico comercial no solicitado (SPAM).",
+    "Ley N° 29733, Ley de protección de datos personales.",
+    "Decreto Legislativo N° 1412, que aprueba la Ley de Gobierno Digital.",
+    "Decreto Supremo N° 031-2005-MTC, Aprueban el Reglamento de la Ley N° 28493 que regula el envío del correo electrónico comercial no solicitado (SPAM).",
+    "Decreto Supremo N° 024-2006-PCM, aprueban Reglamento de la Ley N° 28612 que norma el uso, adquisición y adecuación del software en la Administración Pública.",
+    "Decreto Supremo N° 052-2008-PCM, Reglamento de la Ley de Firmas y Certificados Digitales.",
+    "Decreto Supremo N° 033-2018-PCM, Decreto Supremo que crea la Plataforma Digital Única del Estado Peruano y establecen disposiciones adicionales para el desarrollo del Gobierno Digital.",
+    "Decreto Supremo N° 050-2018-PCM, aprueban la definición de Seguridad Digital en el Ámbito Nacional.",
+    "Decreto Supremo N° 051-2018, Decreto Supremo que crea el Portal de software Público Peruano y establece disposiciones adicionales sobre el software Público Peruano.",
+    "Decreto Supremo N° 118-2018-PCM, declaran de interés nacional el desarrollo del Gobierno Digital, la innovación y la economía digital con enfoque territorial.",
+    "Decreto Supremo N° 029-2021-PCM, Decreto Supremo que aprueba el Reglamento del Decreto Legislativo N° 1412, Decreto Legislativo que aprueba la Ley de Gobierno Digital, y establece disposiciones sobre las condiciones, requisitos y uso de las tecnologías y medios electrónicos en el procedimiento administrativo",
+    "Resolución de Secretaría de Gobierno Digital N° 004-2018-PCM/SEGDI, que aprueba los lineamientos para la gestión y planificación del Gobierno Digital en la Administración Pública.",
+    "Resolución de Secretaría de Gobierno Digital N° 005-2018-PCM/SEGDI, que aprueba lineamientos para la formulación del Plan de Gobierno Digital."
+  ],
+  "Descripcion_del_proceso": [
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Unidades funcionales de AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Requerimiento actualización de sistemas informáticos"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.04.01 Gestión de soluciones y servicios tecnológicos",
+      "Producto": [
+        "Soluciones y servicios tecnológicos institucionales"
+      ],
+      "Receptor_del_producto": [
+        "Unidades funcionales de AGROIDEAS"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Unidades funcionales de AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Inventario de recursos informáticos y de sistemas",
+        "Requerimiento de soporte técnico"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.04.02 Gestión de infraestructura tecnológica y conectividad",
+      "Producto": [
+        "Infraestructura tecnológica y conectividad"
+      ],
+      "Receptor_del_producto": [
+        "Unidades funcionales de AGROIDEAS"
+      ]
+    }
+  ],
+  "Riesgos": [
+    "Considerar este campo en la ficha de producto y proceso de último nivel."
+  ],
+  "Registros": [
+    "Considerar este campo en la ficha de producto y proceso de último nivel."
+  ],
+  "Actividades_del_proceso": [
+    "Anexo al documento: Diagrama de Proceso (bloques) / Diagrama de Actividades (flujogramas)"
+  ]
+}

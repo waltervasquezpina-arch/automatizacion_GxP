@@ -1,0 +1,193 @@
+{
+  "Codigo": "S.03",
+  "Version": "01",
+  "Tipo_de_Proceso": "Soporte",
+  "Nombre": "Gestión de recursos humanos",
+  "Dueno_del_proceso": "Unidad de Administración",
+  "Objetivo_del_proceso": [
+    "Planificar, organizar y gestionar las actividades vinculadas a la administración de los recursos humanos en AGROIDEAS, con el propósito de garantizar la oportuna provisión de personal, promover el desarrollo de competencias, y fortalecer las capacidades, asegurando el cumplimiento eficiente de las funciones y la adecuada ejecución de los procesos institucionales."
+  ],
+  "Objetivo_estratégico": [
+    "OEI.05 Modernizar la gestión institucional en el MIDAGRI",
+    "1. AEI.05.01 Instrumentos de gestión implementados en el ámbito del MIDAGRI:",
+    "- AOI00129701051 - Gestión de recursos humanos",
+    "- AOI00129700129 - Conducción del proceso del talento humano",
+    "2. AEI.05.04 Gestión de los recursos humanos fortalecida en el MIDAGRI:",
+    "- AOI00129701220 - Implementación del plan de bienestar social",
+    "- AOI00129701236 - Implementación del plan de acción de clima organizacional",
+    "- AOI00129701240 - Implementación del plan anual de seguridad y salud en el trabajo"
+  ],
+  "Requisito_normativo": [
+    "Ley N° 28175 - Ley Marco del Empleo Público, y modificatorias.",
+    "Ley N° 29783 - Ley de Seguridad y Salud en el Trabajo, y modificatorias.",
+    "Ley N° 30057 - Ley del Servicio Civil, y modificatorias.",
+    "Ley N° 31075 - Ley de Organización y Funciones del Ministerio de Desarrollo Agrario y Riego.",
+    "Decreto Legislativo N° 1025 - Decreto Legislativo que aprueba normas de capacitación y rendimiento para el sector público.",
+    "Decreto Legislativo N° 1057 - Decreto Legislativo que regula el régimen especial de contratación administrativa de servicios, y modificatorias;",
+    "Decreto Supremo N° 075-2008-PCM, Decreto Supremo que aprueba el Reglamento del Decreto Legislativo N° 1057, que regula el régimen especial de contratación administrativa de servicios, y modificatoria.",
+    "Decreto Supremo N.º 009-2010-PCM – Reglamento del Decreto Legislativo N.º 1025 sobre normas de capacitación y rendimiento para el sector público.",
+    "Decreto Supremo N° 005-2012-TR, Reglamento de la Ley N° 29783, Ley de Seguridad y Salud en el Trabajo.",
+    "Decreto Supremo N° 040-2014-PCM, que aprueba el Reglamento General de la Ley N° 30057, Ley del Servicio Civil, y sus modificatorias.",
+    "Resolución de Presidencia Ejecutiva N° 141-2016-SERVIR-PE, que aprueba la Directiva “Normas para la Gestión del proceso de capacitación en las instituciones públicas”.",
+    "Resolución de Presidencia Ejecutiva N° 168-2019-SERVIR-PE, que aprueba el Lineamientos para la Planificación de Necesidades de Personal bajo el Régimen Regulado por el Decreto Legislativo 1057, en el Ámbito del Sistema Administrativo de Gestión de Recursos Humanos.",
+    "Resolución de Presidencia Ejecutiva N° 065-2020-SERVIR/PE, que aprueba Directiva N° 004-2021-SERVIR/GDSRH “Normas para la gestión de los procesos de selección en el régimen de la Ley N° 30057, Ley del Servicio Civil\".",
+    "Resolución de Presidencia Ejecutiva Nº 068-2020-SERVIR-PE, que aprueba la Directiva del Subsistema de Gestión del Rendimiento."
+  ],
+  "Descripcion_del_proceso": [
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Unidades funcionales de AGROIDEAS",
+        "Dirección Ejecutiva",
+        "SERVIR"
+      ],
+      "Elementos_de_entrada": [
+        "Disposiciones y normativa legales"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.03.01 Elaboración o modificación del reglamento interno de servidores civiles",
+      "Producto": [
+        "Reglamento interno de servidores civiles"
+      ],
+      "Receptor_del_producto": [
+        "Servidores civiles",
+        "Unidades funcionales de AGROIDEAS",
+        "Dirección Ejecutiva"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Unidades funcionales de AGROIDEAS",
+        "Dirección Ejecutiva",
+        "SERVIR"
+      ],
+      "Elementos_de_entrada": [
+        "Normativa vigente emitida por SERVIR",
+        "Estructura orgánica institucional aprobada"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.03.02 Organización del Trabajo y su Distribución",
+      "Producto": [
+        "Diseño de puestos de la entidad"
+      ],
+      "Receptor_del_producto": [
+        "Servidores civiles",
+        "Unidades funcionales de AGROIDEAS",
+        "Dirección Ejecutiva"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Unidades funcionales de AGROIDEAS",
+        "Dirección Ejecutiva",
+        "SERVIR"
+      ],
+      "Elementos_de_entrada": [
+        "Requerimiento de contar o designar personal",
+        "Requerimiento de renovación o termino/cese de contrato"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.03.03 Gestión de la Incorporación",
+      "Producto": [
+        "Contratación de servidores civiles"
+      ],
+      "Receptor_del_producto": [
+        "Servidores civiles",
+        "Unidades funcionales de AGROIDEAS",
+        "Dirección Ejecutiva"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Unidades funcionales de AGROIDEAS",
+        "Dirección Ejecutiva",
+        "SERVIR"
+      ],
+      "Elementos_de_entrada": [
+        "Registro del nuevo servidor civil",
+        "Contrato vigente",
+        "Documentación laboral del servidor civil",
+        "Registro de asistencia",
+        "Solicitud de desplazamiento",
+        "Renuncia o cese del servidor civil",
+        "Informe o presunta denuncia"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.03.04 Administración de personas",
+      "Producto": [
+        "Legajos de personal actualizado"
+      ],
+      "Receptor_del_producto": [
+        "Servidores civiles",
+        "Unidades funcionales de AGROIDEAS",
+        "Dirección Ejecutiva"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Unidades funcionales de AGROIDEAS",
+        "Dirección Ejecutiva",
+        "SERVIR"
+      ],
+      "Elementos_de_entrada": [
+        "Evaluación de desempeño anterior",
+        "Retroalimentación del Jefe inmediato"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.03.05 Gestión del Rendimiento",
+      "Producto": [
+        "Evaluación de rendimiento"
+      ],
+      "Receptor_del_producto": [
+        "Servidores civiles",
+        "Unidades funcionales de AGROIDEAS",
+        "Dirección Ejecutiva"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Unidades funcionales de AGROIDEAS",
+        "Dirección Ejecutiva",
+        "SERVIR"
+      ],
+      "Elementos_de_entrada": [
+        "Normativa vigente",
+        "Contrato y/o adenda vigente",
+        "Convenios colectivos",
+        "Planilla de pago"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.03.06 Gestión de la Compensación",
+      "Producto": [
+        "Compensaciones económicas y previsionales"
+      ],
+      "Receptor_del_producto": [
+        "Servidores civiles",
+        "Unidades funcionales de AGROIDEAS",
+        "Dirección Ejecutiva"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "Unidades funcionales de AGROIDEAS",
+        "Dirección Ejecutiva",
+        "SERVIR"
+      ],
+      "Elementos_de_entrada": [
+        "Plan de Desarrollo de Personas – PDP",
+        "Requerimiento de capacitación"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.03.07 Gestión del Desarrollo y Capacitación",
+      "Producto": [
+        "Capacitaciones para servidores civiles"
+      ],
+      "Receptor_del_producto": [
+        "Servidores civiles",
+        "Unidades funcionales de AGROIDEAS",
+        "Dirección Ejecutiva"
+      ]
+    }
+  ],
+  "Riesgos": [
+    "Considerar este campo en la ficha de producto y proceso de último nivel."
+  ],
+  "Registros": [
+    "Considerar este campo en la ficha de producto y proceso de último nivel."
+  ],
+  "Actividades_del_proceso": [
+    "Anexo al documento: Diagrama de Proceso (bloques) / Diagrama de Actividades (flujogramas)"
+  ]
+}
