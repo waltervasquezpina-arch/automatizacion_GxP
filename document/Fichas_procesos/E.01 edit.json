@@ -1,0 +1,57 @@
+
+{
+  "Codigo": "E.01",
+  "Version": "01",
+  "Tipo_de_Proceso": "Estratégico",
+  "Nombre": "Gestión estratégica",
+  "Dueno_del_proceso": "Unidad de Planeamiento y Presupuesto",
+  "Objetivo_del_proceso": "Formular, aprobar y evaluar el planeamiento de corto y mediano plazo de AGROIDEAS, la programación, formulación, ejecución y evaluación de su presupuesto para el cumplimiento de la finalidad institucional, esto se realiza a través de las unidades funcionales de manera articulada con la normativa, lineamientos generales y demás disposiciones que establezca el MIDAGRI.",
+  "Objetivo_estratégico": "",
+  "Requisito_normativo": "",
+  "Descripcion_del_proceso": [
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "MIDAGRI",
+        "AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Políticas y planes propuestos por el MIDAGRI",
+        "Plan Operativo Anual Articulado Multianual (POAAR)"
+      ],
+      "Proceso_desplegado_Nivel_2": "E.01.01 Gestión del planeamiento institucional",
+      "Producto": [
+        "Programación operativa institucional multianual",
+        "Seguimiento y evaluación de la ejecución del POI",
+        "Memoria Anual de AGROIDEAS"
+      ],
+      "Receptor_del_producto": [
+        "AGROIDEAS"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "MIDAGRI",
+        "AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Presupuesto institucional anual de MIDAGRI"
+      ],
+      "Proceso_desplegado_Nivel_2": "E.01.02 Gestión de la programación y ejecución presupuestal",
+      "Producto": [
+        "Programación multianual presupuestaria",
+        "Ejecución presupuestaria",
+        "Seguimiento y evaluación de la ejecución presupuestal institucional",
+        "Nota de modificación presupuestaria",
+        "Informe de propuesta de modificación",
+        "Presupuesto Institucional modificado",
+        "Reporte sobre la ejecución de gastos"
+      ],
+      "Receptor_del_producto": [
+        "AGROIDEAS"
+      ]
+    }
+  ],
+  "Riesgos": "Considerar este campo en la ficha de producto y proceso de último nivel.",
+  "Registros": "Considerar este campo en la ficha de producto y proceso de último nivel.",
+  "Actividades_del_proceso": "Anexo al documento: Diagrama de Proceso (bloques) / Diagrama de Actividades (flujogramas)"
+}
