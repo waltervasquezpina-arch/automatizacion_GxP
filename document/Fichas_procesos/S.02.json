@@ -1,0 +1,157 @@
+{
+  "Codigo": "S.02",
+  "Version": "01",
+  "Tipo_de_Proceso": "Soporte",
+  "Nombre": "Gestión de recursos financieros",
+  "Dueno_del_proceso": "Unidad de Administración",
+  "Objetivo_del_proceso": [
+    "Planificar y gestionar las actividades orientadas a la adecuada administración de los recursos financieros de AGROIDEAS y la implementación de sistema de control interno e integridad institucional, garantizando el cumplimiento de las obligaciones institucionales y el uso eficiente y transparente de los fondos públicos. De igual manera, este proceso incluye la generación de información oportuna y confiable para la rendición de cuentas y la toma de decisiones."
+  ],
+  "Objetivo_estratégico": [
+    "OEI.05 Modernizar la gestión institucional en el MIDAGRI",
+    "AEI.05.01 Instrumentos de gestión implementados en el ámbito del MIDAGRI:",
+    "- AOI00129700124 - Gestión administrativa y operativa de tesorería",
+    "- AOI00129700125 - Conducción y supervisión de los recursos financieros del Programa"
+  ],
+  "Requisito_normativo": [
+    "Ley N° 27269, Ley de Firmas y Certificados Digitales.",
+    "Ley N° 27619, Ley que regula la autorización de viajes al exterior de servidores y funcionarios públicos.",
+    "Ley N° 28807, Ley que establece que los viajes oficiales al exterior de servidores y funcionarios públicos se realicen en clase económica",
+    "Ley N° 32069, Ley General de Contrataciones Públicas",
+    "Ley de Presupuesto del Sector Público para el Año Fiscal correspondiente.",
+    "Decreto Legislativo N° 1436, Decreto Legislativo Marco de la Administración Financiera del Sector Publico.",
+    "Decreto Legislativo N° 1438, Decreto Legislativo del Sistema Nacional de Contabilidad.",
+    "Decreto Legislativo N° 1440, Decreto Legislativo del Sistema Nacional de Presupuesto Público.",
+    "Decreto Legislativo N° 1441, Decreto Legislativo del Sistema Nacional de Tesorería.",
+    "Decreto Supremo N° 052-2008-PCM, Reglamento de la Ley de Firmas y Certificados Digitales.",
+    "Decreto Supremo N° 047-2002-PCM, prueban normas reglamentarias sobre autorización de viajes al exterior de servidores y funcionarios públicos.",
+    "Decreto Supremo N° 012-2007-PCM, Prohíben a las entidades del Estado adquirir bebidas alcohólicas con cargo a recursos públicos."
+  ],
+  "Descripcion_del_proceso": [
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Expediente de gasto comprometido"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.02.01 Gestión del control previo en la fase de devengado",
+      "Producto": [
+        "Obligaciones financieras devengadas"
+      ],
+      "Receptor_del_producto": [
+        "AGROIDEAS"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Recibo de ingreso",
+        "Comprobante de pago",
+        "Notas de cargo, notas de abono o extractos bancarios"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.02.02 Gestión de pagos e ingresos",
+      "Producto": [
+        "Pagos efectuados e ingresos percibidos"
+      ],
+      "Receptor_del_producto": [
+        "AGROIDEAS"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Estado de Cuenta",
+        "Lineamientos para la administración de caja chica",
+        "Resolución de designación de responsables de fondos de caja chica",
+        "Documentos de gastos"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.02.03 Gestión de la información de tesorería",
+      "Producto": [
+        "Información de tesorería actualizada"
+      ],
+      "Receptor_del_producto": [
+        "AGROIDEAS"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Solicitud de custodia de renovación, ejecución o devolución de cartas fianza en garantía de fiel cumplimiento, cheques de gerencia u otros valores"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.02.04 Administración de valores",
+      "Producto": [
+        "Valores financieros institucionales administrados"
+      ],
+      "Receptor_del_producto": [
+        "AGROIDEAS"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Solicitud de viáticos",
+        "Rendición de cuenta del viático"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.02.05 Otorgamiento y rendición de cuentas por viáticos",
+      "Producto": [
+        "Viáticos otorgados y rendidos"
+      ],
+      "Receptor_del_producto": [
+        "AGROIDEAS"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Resolución Directoral de asignación de fondos bajo la modalidad de encargos",
+        "Solicitud del otorgamiento de fondos bajo la modalidad de encargos",
+        "Rendición de cuenta del otorgamiento de fondos bajo la modalidad de encargos"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.02.06 Otorgamiento de fondos en modalidad de encargo para servidores civiles",
+      "Producto": [
+        "Fondos en modalidad de encargo otorgados y rendidos"
+      ],
+      "Receptor_del_producto": [
+        "AGROIDEAS"
+      ]
+    },
+    {
+      "Proveedor_de_elemento_de_entrada": [
+        "AGROIDEAS"
+      ],
+      "Elementos_de_entrada": [
+        "Información financiera",
+        "Información presupuestal",
+        "Conciliación",
+        "Registro de transferencias financieras"
+      ],
+      "Proceso_desplegado_Nivel_2": "S.02.07 Elaboración de estados financieros y presupuestales",
+      "Producto": [
+        "Estados financieros y presupuestales presentados"
+      ],
+      "Receptor_del_producto": [
+        "AGROIDEAS"
+      ]
+    }
+  ],
+  "Riesgos": [
+    "Considerar este campo en la ficha de producto y proceso de último nivel."
+  ],
+  "Registros": [
+    "Considerar este campo en la ficha de producto y proceso de último nivel."
+  ],
+  "Actividades_del_proceso": [
+    "Anexo al documento: Diagrama de Proceso (bloques) / Diagrama de Actividades (flujogramas)"
+  ]
+}
